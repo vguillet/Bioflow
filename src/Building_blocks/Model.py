@@ -11,8 +11,7 @@ import random
 # Libs
 
 # Own modules
-from src.Tools.Population_tools import get_population_fitness_evaluation
-from src.Tools.Population_tools import get_population_age
+from src.Building_blocks.Population import Population
 
 
 __version__ = '1.1.1'
@@ -62,10 +61,11 @@ class Model:
         print(self.__str__())
 
         evaluation_function = self.evaluation_function
+        population = Population(population)
 
         # ----- Perform training
         for epoch in range(self.epochs):
-            print(f"-------------------> Epoch {epoch + 1}")
+            print(f"============================================= Epoch {epoch + 1}")
             # --> Set trackers to default
             step_tracker = epoch
             max_step_tracker = self.epochs
@@ -103,13 +103,13 @@ class Model:
         print("--------------------------------------------------------------------------------------")
 
         # --> Evaluate population
-        population, fitness_evaluation = get_population_fitness_evaluation(population, evaluation_function)
+        fitness_evaluation = population.get_fitness_evaluation(evaluation_function)
         fitness_evaluation.sort()
 
         print("\n")
         print("Best solution fitness:", max(fitness_evaluation))
         print("Population fitness:", fitness_evaluation)
-        print("Population age:", get_population_age(population))
+        print("Population age:", population.get_individual_ages())
 
         return population
 
@@ -130,18 +130,20 @@ if __name__ == "__main__":
 
     my_model.add_layer(EVO_layer(individual_template=Indvidual_1,
                                  parameter_randomiser=Randomiser_1,
-                                 percent_parents=0.5,
+                                 percent_parents=0.3,
                                  percent_parents_in_next_gen=0.2,
-                                 percent_random_ind_in_next_gen=0.1,
+                                 percent_random_ind_in_next_gen=0.3,
                                  verbose=1))
 
     my_model.add_layer(MODULATOR_layer(new_evaluation_function=None,
                                        new_step=10,
-                                       new_max_step=100))
+                                       new_max_step=100,
+                                       verbose=1))
 
     my_model.add_layer(RESET_layer(evaluation_function_bool=False,
                                    step_bool=True,
-                                   max_step_bool=True))
+                                   max_step_bool=True,
+                                   verbose=1))
 
     # --> Create solution population
     my_solutions = []

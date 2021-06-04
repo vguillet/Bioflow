@@ -12,8 +12,9 @@ from copy import deepcopy
 
 # Own modules
 from src.Building_blocks.Layers.abc_Layer import Layer
+from src.Building_blocks.Population import Population
 from src.Tools.Parameter_tools import select_parameter_to_modify
-from src.Tools.Population_tools import get_population_fitness_evaluation
+
 
 __version__ = '1.1.1'
 __author__ = 'Victor Guillet'
@@ -24,13 +25,15 @@ __date__ = '10/09/2019'
 
 class EVO_layer(Layer):
     def __init__(self,
-                 individual_template,
                  parameter_randomiser,
+
+                 individual_template,
                  percent_parents: float = 0.3,
                  percent_parents_in_next_gen: float = 0.1,
                  percent_random_ind_in_next_gen: float = 0.1,
-                 mutation_rate: float = 0.2,
                  selection_method: int = 0,
+
+                 mutation_rate: float = 0.2,
                  parameter_blacklist: list = [],
                  parameters_decay_function: int = 0,
                  verbose=0):
@@ -39,14 +42,15 @@ class EVO_layer(Layer):
         self.layer_ref = None
         self.layer_type = "EVO_layer"
 
-        self.individual_template = individual_template
         self.parameter_randomiser = parameter_randomiser
 
+        self.individual_template = individual_template
         self.percent_parents = percent_parents
         self.percent_parents_in_next_gen = percent_parents_in_next_gen
-        self.percent_random_ind_in_next_gen= percent_random_ind_in_next_gen
-        self.mutation_rate = mutation_rate
+        self.percent_random_ind_in_next_gen = percent_random_ind_in_next_gen
         self.selection_method = selection_method
+        self.mutation_rate = mutation_rate
+
         self.parameter_blacklist = parameter_blacklist
         self.parameters_decay_function = parameters_decay_function
 
@@ -69,7 +73,7 @@ class EVO_layer(Layer):
     def step(self, population, evaluation_function, epoch, max_epoch):
 
         # --> Evaluate population
-        population, fitness_evaluation = get_population_fitness_evaluation(population, evaluation_function)
+        fitness_evaluation = population.get_fitness_evaluation(evaluation_function)
 
         parents_count = round(len(population) * self.percent_parents)
         parents_count_in_next_gen = round(len(population) * self.percent_parents_in_next_gen)
@@ -110,7 +114,7 @@ class EVO_layer(Layer):
         nb_of_parameters_to_mutate = round(parents[0].nb_of_adjustable_parameters * self.mutation_rate) or 1
 
         # --> Add required number of parents to new population (from best to worst)
-        new_population = population[:parents_count_in_next_gen]
+        new_population = Population(population[:parents_count_in_next_gen])
 
         # --> Generate offsprings from parents with mutations
         # Cycle through parent list to create offspring
@@ -143,14 +147,14 @@ class EVO_layer(Layer):
             new_population.append(deepcopy(self.individual_template()))
 
         if self.verbose == 1:
-            print(f"----------> EVO layer {epoch + 1}")
-            print(f"Parent count: {parents_count}")
-            print("Parents fitness:")
+            print(f"---- << EVO layer {epoch + 1} >> ----")
+            print(f" Parent count: {parents_count}")
+            print(" Parents fitness:")
             for parent in parents:
-                print(f"    > Ref: {parent}, Fitness: {parent.fitness_history[-1]}", parent.fitness_history)
+                print(f"    > Fitness: {parent.fitness_history[-1]}, Age: {len(parent.fitness_history)}")
 
+            print(f" Nb. parents in new population: {parents_count_in_next_gen}")
+            print(f" Random individual in new population: {random_ind_count_in_next_gen}")
             print("\n")
-            print(f"Nb. parents in new population: {parents_count_in_next_gen}")
-            print(f"Random individual in new population: {random_ind_count_in_next_gen}")
 
         return new_population

@@ -17,7 +17,11 @@ __date__ = '10/09/2019'
 
 
 class MODULATOR_layer(Layer):
-    def __init__(self, new_evaluation_function=None, new_step=None, new_max_step=None):
+    def __init__(self,
+                 new_evaluation_function=None,
+                 new_step=None,
+                 new_max_step=None,
+                 verbose=0):
         super().__init__()
 
         self.layer_ref = "      "
@@ -27,12 +31,15 @@ class MODULATOR_layer(Layer):
         self.new_step = new_step
         self.new_max_step = new_max_step
 
+        self.verbose = verbose
+
         return
 
     def __str__(self):
         return f"> {self.layer_type}"
 
     def step(self, population, evaluation_function, epoch, max_epoch):
+
         if self.new_evaluation_function is not None:
             evaluation_function = self.new_evaluation_function
 
@@ -41,5 +48,18 @@ class MODULATOR_layer(Layer):
 
         if self.new_max_step is not None:
             max_epoch = self.new_max_step
+
+        if self.verbose == 1:
+            print(f"---- << MODULATOR layer >> ----")
+            if self.new_evaluation_function is not None:
+                print(f" Set evaluation function: {self.new_evaluation_function}")
+
+            if self.new_step is not None:
+                print(f" Set step: {self.new_step}")
+
+            if self.new_max_step is not None:
+                print(f" Set max step: {self.new_max_step}")
+
+            print("\n")
 
         return population, evaluation_function, epoch, max_epoch

@@ -1,6 +1,8 @@
+
 ################################################################################################################
 """
-
+Ensure that the new population is an edited version of the old one
+or the new population is a Population class instance
 """
 
 # Built-in/Generic Imports
