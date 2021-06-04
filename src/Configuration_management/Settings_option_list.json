@@ -1,0 +1,47 @@
+{
+  "date_interval_settings": ["Training",
+                             "Benchmark",
+                             "Full data"],
+
+  "trading_term": ["Short term",
+                     "Long term"],
+
+  "price_selection": ["Open",
+                      "Close"],
+
+  "decay_functions": ["Fixed value",
+                      "Linear",
+                      "Exponential",
+                      "Logarithmic"],
+
+  "parents_selection_methods": ["Elitic"],
+
+  "evaluation_methods": ["Net worth",
+                         "Metalabels",
+                         "Metalabels (buy/sell)",
+                         "Metalabels average",
+                         "Buy count",
+                         "Sell count",
+                         "Transaction count"],
+
+  "threshold_type": ["Fixed value",
+                     "Bollinger bands size",
+                     "Bollinger bands/price diff"],
+
+  "buffer_type": ["No buffer",
+                  "Fixed value buffer",
+                  "Google-trend evolutive buffer"],
+
+  "metalabeling_modes": ["Peak",
+                         "Simple",
+                         "Hybrid"],
+
+  "investment_modes": ["Fixed investment value",
+                       "Fixed investment percentage",
+                       "Investment value pegged to trade signal",
+                       "Investment % pegged to trade signal"],
+
+  "cash_in_modes": ["Total asset liquidation",
+                    "Fixed liquidation percentage",
+                    "Liquidation % pegged to trade signal"]
+}
