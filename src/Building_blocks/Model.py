@@ -73,7 +73,7 @@ class Model:
                         max_step_tracker = self.epochs
 
                 # --> Process modulator layer
-                if layer.layer_type == "MODULATOR_layer":
+                elif layer.layer_type == "MODULATOR_layer":
                     population, evaluation_function, step_tracker, max_step_tracker = layer.step(population=population,
                                                                                                  evaluation_function=evaluation_function,
                                                                                                  epoch=step_tracker,

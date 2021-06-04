@@ -21,6 +21,8 @@ class Indvidual_1(Individual):
     def __init__(self, parameter_set=None):
         super().__init__()
 
+        self.nb_of_adjustable_parameters = 4
+
         self.parameter_set = {"a": random.randint(0, 100),
                               "b": random.randint(0, 100),
                               "c": random.randint(0, 100),

@@ -23,7 +23,7 @@ class Randomiser_1:
                      parameter_to_modify,
                      current_generation,
                      nb_of_generations,
-                     decay_function):
+                     parameters_decay_function):
 
         offspring.parameter_set[parameter_to_modify] = random.randint(0, 100)
 

@@ -99,6 +99,7 @@ class EVO_layer(Layer):
                           parameters_decay_function: int):
         # ----- Select parents
         parents = []
+
         # --> Determine fitness ratio
         fitness_ratios = []
         for i in range(len(fitness_evaluation)):
@@ -143,7 +144,7 @@ class EVO_layer(Layer):
             # Mutate offspring
             for _ in range(nb_of_parameters_to_mutate):
                 # Select parameter class to modify
-                parameter_to_modify = select_parameter_to_modify(parameter_set=offspring.parameter_set.keys(),
+                parameter_to_modify = select_parameter_to_modify(parameter_set=offspring.parameter_set,
                                                                  parameter_blacklist=parameter_blacklist)
 
                 # Modify parameter
