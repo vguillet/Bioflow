@@ -18,9 +18,10 @@ __date__ = '10/09/2019'
 
 
 class Indvidual_1(Individual):
-    def __init__(self, parameter_set=None):
+    def __init__(self):
         super().__init__()
 
+        self.fitness_history = []
         self.nb_of_adjustable_parameters = 4
 
         self.parameter_set = {"a": random.randint(0, 100),

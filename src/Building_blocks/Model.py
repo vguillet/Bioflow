@@ -1,3 +1,4 @@
+
 ################################################################################################################
 """
 
@@ -10,6 +11,9 @@ import random
 # Libs
 
 # Own modules
+from src.Tools.Population_tools import get_population_fitness_evaluation
+from src.Tools.Population_tools import get_population_age
+
 
 __version__ = '1.1.1'
 __author__ = 'Victor Guillet'
@@ -30,30 +34,38 @@ class Model:
         self.layers = layers
         self.epochs = epochs
 
+        self.layer_count = 0
+
         return
 
     def __str__(self):
         print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
         for layer in self.layers:
-            print(layer)
+            print(layer.layer_ref, layer)
         print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
         return ""
 
     def add_layer(self, layer):
-        self.layers.append(layer)
+        if layer.layer_type != "RESET_layer" and layer.layer_type != "MODULATOR_layer":
+            self.layer_count += 1
+            layer.layer_ref = self.layer_count
+            self.layers.append(layer)
+
+        else:
+            self.layers.append(layer)
+
         return
 
     def train(self, population):
-        print("------------------------------------------------------------------------")
-        print("Training started...........")
         print("\n")
+        print("--------------------------------------------------------------------------------------")
         print(self.__str__())
-        print("\n")
 
         evaluation_function = self.evaluation_function
 
         # ----- Perform training
         for epoch in range(self.epochs):
+            print(f"-------------------> Epoch {epoch + 1}")
             # --> Set trackers to default
             step_tracker = epoch
             max_step_tracker = self.epochs
@@ -88,16 +100,16 @@ class Model:
 
         print("\n")
         print("Training complete")
-        print("------------------------------------------------------------------------")
+        print("--------------------------------------------------------------------------------------")
 
         # --> Evaluate population
-        fitness_evaluation = []
-        for individual in population:
-            fitness_evaluation.append(evaluation_function(individual))
+        population, fitness_evaluation = get_population_fitness_evaluation(population, evaluation_function)
+        fitness_evaluation.sort()
 
         print("\n")
-        print("Best solution found:", max(fitness_evaluation))
-        print(fitness_evaluation)
+        print("Best solution fitness:", max(fitness_evaluation))
+        print("Population fitness:", fitness_evaluation)
+        print("Population age:", get_population_age(population))
 
         return population
 
@@ -117,35 +129,24 @@ if __name__ == "__main__":
                      epochs=10)
 
     my_model.add_layer(EVO_layer(individual_template=Indvidual_1,
-                                 parameter_randomiser=Randomiser_1))
-
-    my_model.add_layer(EVO_layer(individual_template=Indvidual_1,
-                                 parameter_randomiser=Randomiser_1))
+                                 parameter_randomiser=Randomiser_1,
+                                 percent_parents=0.5,
+                                 percent_parents_in_next_gen=0.2,
+                                 percent_random_ind_in_next_gen=0.1,
+                                 verbose=1))
 
     my_model.add_layer(MODULATOR_layer(new_evaluation_function=None,
                                        new_step=10,
                                        new_max_step=100))
 
-    my_model.add_layer(EVO_layer(individual_template=Indvidual_1,
-                                 parameter_randomiser=Randomiser_1))
-
-    my_model.add_layer(EVO_layer(individual_template=Indvidual_1,
-                                 parameter_randomiser=Randomiser_1))
-
     my_model.add_layer(RESET_layer(evaluation_function_bool=False,
                                    step_bool=True,
                                    max_step_bool=True))
 
-    my_model.add_layer(EVO_layer(individual_template=Indvidual_1,
-                                 parameter_randomiser=Randomiser_1))
-
-    print(my_model)
-
     # --> Create solution population
     my_solutions = []
-    for _ in range(100):
+    for _ in range(10):
         my_solutions.append(Indvidual_1())
 
     # --> Optimise solutions
-    my_model.train(my_solutions)
-
+    my_solutions = my_model.train(my_solutions)

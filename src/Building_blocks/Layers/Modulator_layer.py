@@ -20,6 +20,7 @@ class MODULATOR_layer(Layer):
     def __init__(self, new_evaluation_function=None, new_step=None, new_max_step=None):
         super().__init__()
 
+        self.layer_ref = "      "
         self.layer_type = "MODULATOR_layer"
 
         self.new_evaluation_function = new_evaluation_function

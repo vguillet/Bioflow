@@ -13,6 +13,7 @@ from copy import deepcopy
 # Own modules
 from src.Building_blocks.Layers.abc_Layer import Layer
 from src.Tools.Parameter_tools import select_parameter_to_modify
+from src.Tools.Population_tools import get_population_fitness_evaluation
 
 __version__ = '1.1.1'
 __author__ = 'Victor Guillet'
@@ -25,15 +26,17 @@ class EVO_layer(Layer):
     def __init__(self,
                  individual_template,
                  parameter_randomiser,
-                 percent_parents: int = 0.3,
-                 percent_parents_in_next_gen: int = 0.1,
+                 percent_parents: float = 0.3,
+                 percent_parents_in_next_gen: float = 0.1,
                  percent_random_ind_in_next_gen: float = 0.1,
                  mutation_rate: float = 0.2,
                  selection_method: int = 0,
                  parameter_blacklist: list = [],
-                 parameters_decay_function: int = 0):
+                 parameters_decay_function: int = 0,
+                 verbose=0):
         super().__init__()
 
+        self.layer_ref = None
         self.layer_type = "EVO_layer"
 
         self.individual_template = individual_template
@@ -47,9 +50,12 @@ class EVO_layer(Layer):
         self.parameter_blacklist = parameter_blacklist
         self.parameters_decay_function = parameters_decay_function
 
+        self.verbose = verbose
+
         return
 
     def __str__(self):
+
         settings_option_lists = json.load(open(r"src/Configuration_management/Settings_option_list.json"))
         selection_method = settings_option_lists["parents_selection_methods"][self.selection_method]
 
@@ -61,42 +67,17 @@ class EVO_layer(Layer):
                f"Selection method: {selection_method}"
 
     def step(self, population, evaluation_function, epoch, max_epoch):
+
         # --> Evaluate population
-        fitness_evaluation = []
-        for individual in population:
-            fitness_evaluation.append(evaluation_function(individual))
+        population, fitness_evaluation = get_population_fitness_evaluation(population, evaluation_function)
 
-        assert(len(fitness_evaluation) == len(population))
+        parents_count = round(len(population) * self.percent_parents)
+        parents_count_in_next_gen = round(len(population) * self.percent_parents_in_next_gen)
+        random_ind_count_in_next_gen = round(len(population) * self.percent_random_ind_in_next_gen)
 
-        # --> Generate new population
-        new_population = self.evolve_population(parameter_randomiser=self.parameter_randomiser,
-                                                epoch=epoch,
-                                                max_epoch=max_epoch,
-                                                population=population,
-                                                fitness_evaluation=fitness_evaluation,
-                                                parents_count=round(len(population) * self.percent_parents),
-                                                parents_count_in_next_gen=round(len(population) * self.percent_parents_in_next_gen),
-                                                random_ind_count_in_next_gen=round(len(population) * self.percent_random_ind_in_next_gen),
-                                                mutation_rate=self.mutation_rate,
-                                                selection_method=self.selection_method,
-                                                parameter_blacklist=self.parameter_blacklist,
-                                                parameters_decay_function=self.parameters_decay_function)
+        assert len(population) >= parents_count_in_next_gen + random_ind_count_in_next_gen, \
+            "!!! Sum of desired parent count and random individual count larger than total population size !!!"
 
-        return new_population
-
-    def evolve_population(self,
-                          epoch: int,
-                          max_epoch: int,
-                          population: list,
-                          fitness_evaluation: list,
-                          parents_count: int,
-                          parents_count_in_next_gen: int,
-                          random_ind_count_in_next_gen: int,
-                          mutation_rate: float,
-                          selection_method: int,
-                          parameter_blacklist: list,
-                          parameter_randomiser,
-                          parameters_decay_function: int):
         # ----- Select parents
         parents = []
 
@@ -108,7 +89,7 @@ class EVO_layer(Layer):
         # --> Select individuals
         # TODO: Implement alternative selection methods
         # Elitic selection
-        if selection_method == 0:
+        if self.selection_method == 0:
             # Use bubblesort to sort population, fitness_evaluation, and fitness_ratios according to fitness_ratio
             for _ in range(len(fitness_ratios)):
                 for i in range(len(fitness_ratios) - 1):
@@ -126,10 +107,10 @@ class EVO_layer(Layer):
 
         # ----- Generate new population
         # TODO: Throttle number of parameters to mutate
-        nb_of_parameters_to_mutate = round(parents[0].nb_of_adjustable_parameters * mutation_rate) or 1
+        nb_of_parameters_to_mutate = round(parents[0].nb_of_adjustable_parameters * self.mutation_rate) or 1
 
         # --> Add required number of parents to new population (from best to worst)
-        new_population = parents[:parents_count_in_next_gen]
+        new_population = population[:parents_count_in_next_gen]
 
         # --> Generate offsprings from parents with mutations
         # Cycle through parent list to create offspring
@@ -145,14 +126,14 @@ class EVO_layer(Layer):
             for _ in range(nb_of_parameters_to_mutate):
                 # Select parameter class to modify
                 parameter_to_modify = select_parameter_to_modify(parameter_set=offspring.parameter_set,
-                                                                 parameter_blacklist=parameter_blacklist)
+                                                                 parameter_blacklist=self.parameter_blacklist)
 
                 # Modify parameter
-                offspring = parameter_randomiser().modify_param(offspring=offspring,
-                                                                parameter_to_modify=parameter_to_modify,
-                                                                current_generation=epoch,
-                                                                nb_of_generations=max_epoch,
-                                                                parameters_decay_function=parameters_decay_function)
+                offspring = self.parameter_randomiser().modify_param(offspring=offspring,
+                                                                     parameter_to_modify=parameter_to_modify,
+                                                                     current_generation=epoch,
+                                                                     nb_of_generations=max_epoch,
+                                                                     parameters_decay_function=self.parameters_decay_function)
 
             # Add offspring to new population
             new_population.append(offspring)
@@ -161,6 +142,15 @@ class EVO_layer(Layer):
         for _ in range(random_ind_count_in_next_gen):
             new_population.append(deepcopy(self.individual_template()))
 
-        assert (len(new_population) == len(population))
+        if self.verbose == 1:
+            print(f"----------> EVO layer {epoch + 1}")
+            print(f"Parent count: {parents_count}")
+            print("Parents fitness:")
+            for parent in parents:
+                print(f"    > Ref: {parent}, Fitness: {parent.fitness_history[-1]}", parent.fitness_history)
+
+            print("\n")
+            print(f"Nb. parents in new population: {parents_count_in_next_gen}")
+            print(f"Random individual in new population: {random_ind_count_in_next_gen}")
 
         return new_population

@@ -20,6 +20,7 @@ class RESET_layer(Layer):
     def __init__(self, evaluation_function_bool: bool, step_bool: bool, max_step_bool: bool):
         super().__init__()
 
+        self.layer_ref = "      "
         self.layer_type = "RESET_layer"
 
         self.evaluation_function_bool = evaluation_function_bool
