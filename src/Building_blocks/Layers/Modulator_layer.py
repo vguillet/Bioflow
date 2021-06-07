@@ -23,26 +23,27 @@ class MODULATOR_layer(Layer):
                  new_max_step=None,
                  verbose=0,
                  name=""):
-        super().__init__(name=name)
+        # --> Meta
+        self.ref = "      "
+        self.type = "MODULATOR"
+        self.name = name
 
-        self.layer_ref = "      "
-        self.layer_type = "MODULATOR_layer"
+        self.verbose = verbose
 
+        # --> Settings
         self.new_evaluation_function = new_evaluation_function
         self.new_step = new_step
         self.new_max_step = new_max_step
 
-        self.verbose = verbose
-
         return
 
     def __str__(self):
-        if self.layer_name != "":
-            layer_name = f" - {self.layer_name}"
+        if self.name != "":
+            layer_name = f" - {self.name}"
         else:
             layer_name = ""
 
-        return f"> {self.layer_type}" + layer_name
+        return f"> {self.type}" + layer_name
 
     def step(self, population, evaluation_function, epoch, max_epoch):
 

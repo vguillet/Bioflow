@@ -28,9 +28,9 @@ class PSO_Layer(Layer):
     def __init__(self,
                  parameter_randomiser,
 
-                 inertia_weight: float,
-                 cognitive_weight: float,       # Particle best influence
-                 social_weight: float,          # Swarm overall best influence
+                 inertia_weight: float = 0.729,
+                 cognitive_weight: float = 1.49445,       # Particle best influence
+                 social_weight: float = 1.49445,          # Swarm overall best influence
 
                  parameter_blacklist: list = [],
                  parameters_decay_function: int = 0,
@@ -38,12 +38,15 @@ class PSO_Layer(Layer):
                  optimisation_mode="max",
                  verbose=0,
                  name=""):
-        super().__init__(name=name)
+        # --> Meta
+        self.ref = ""
+        self.type = "PSO"
+        self.name = name
 
-        self.layer_type = "PSO_layer"
         self.verbose = verbose
         self.optimisation_mode = optimisation_mode
 
+        # --> Settings
         self.parameter_randomiser = parameter_randomiser
 
         self.inertia_weight = inertia_weight
@@ -56,12 +59,12 @@ class PSO_Layer(Layer):
         return
 
     def __str__(self):
-        if self.layer_name != "":
-            layer_name = f"{self.layer_name} - "
+        if self.name != "":
+            layer_name = f"{self.name} - "
         else:
             layer_name = ""
 
-        return f"> {self.layer_type} - " + layer_name + \
+        return f"> {self.type} - " + layer_name + \
                f"Inertia weight: {self.inertia_weight}, " \
                f"Cognitive weight: {self.cognitive_weight}, " \
                f"Social weight: {self.social_weight}"

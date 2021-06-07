@@ -23,26 +23,27 @@ class RESET_layer(Layer):
                  max_step_bool: bool,
                  verbose=0,
                  name=""):
-        super().__init__(name=name)
+        # --> Meta
+        self.ref = "      "
+        self.type = "RESET"
+        self.name = name
 
-        self.layer_ref = "      "
-        self.layer_type = "RESET_layer"
+        self.verbose = verbose
 
+        # --> Settings
         self.evaluation_function_bool = evaluation_function_bool
         self.step_bool = step_bool
         self.max_step_bool = max_step_bool
 
-        self.verbose = verbose
-
         return
 
     def __str__(self):
-        if self.layer_name != "":
-            layer_name = f" - {self.layer_name}"
+        if self.name != "":
+            layer_name = f" - {self.name}"
         else:
             layer_name = ""
 
-        return f"> {self.layer_type}" + layer_name
+        return f"> {self.type}" + layer_name
 
     def step(self, population=None, evaluation_function=None, epoch=None, max_epoch=None):
         if self.verbose == 1:

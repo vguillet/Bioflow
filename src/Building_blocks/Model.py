@@ -5,12 +5,11 @@
 """
 
 # Built-in/Generic Imports
-import json
-import random
 
 # Libs
 
 # Own modules
+from src.Building_blocks.Layers.abc_Layer import Layer
 from src.Building_blocks.Population import Population
 
 
@@ -22,15 +21,24 @@ __date__ = '10/09/2019'
 ################################################################################################################
 
 
-class Model:
+class Model(Layer):
     def __init__(self,
                  evaluation_function,
                  optimisation_mode="max",
                  layers: list = [],
-                 epochs: int = 10):
+                 epochs: int = 10,
+                 verbose=0,
+                 name=""):
+        # --> Meta
+        self.ref = ""
+        self.type = "MODEL"
+        self.name = name
 
-        self.evaluation_function = evaluation_function
+        self.verbose = verbose
         self.optimisation_mode = optimisation_mode
+
+        # --> Settings
+        self.evaluation_function = evaluation_function
 
         self.layers = layers
         self.epochs = epochs
@@ -40,18 +48,67 @@ class Model:
         return
 
     def __str__(self):
-        print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
         for layer in self.layers:
-            print(layer.layer_ref, layer)
-        print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+            if layer.type == "MODEL":
+                print(f">>>>>>>>>>>>> SUB-MODEL - {layer.epochs} epochs")
+                print(layer, end="")
+                print(">>>>>>>>>>>>>")
+
+            else:
+                print(" ", layer.ref, layer)
+
         return ""
 
+    def summary(self):
+        # --> Count step types
+        def count_layer_types(layer_list, layers_count):
+            for layer in layer_list:
+                if layer.type == "MODEL":
+                    count_layer_types(layer.layers, layers_count)
+
+                else:
+                    if layer.type in layers_count.keys():
+                        layers_count[layer.type] += 1
+                    else:
+                        layers_count[layer.type] = 1
+
+            return layers_count
+
+        layers_counter = count_layer_types(layer_list=self.layers,
+                                           layers_count={})
+
+        # --> Print model structure
+        print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+        print("                                 MODEL Structure                                 ")
+        print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+        print("")
+        print(self.__str__())
+        print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+
+        print("")
+        print("-> Epoch training steps count:")
+        for key in layers_counter.keys():
+            if key != "RESET" and key != "MODULATOR" and key != "STEP" and key != "MODEL":
+                print(f" - {key} steps: {layers_counter[key]}")
+
+        print("")
+        print("-> Full training steps count:")
+
+        # --> Print run recap
+        for key in layers_counter.keys():
+            if key != "RESET" and key != "MODULATOR" and key != "STEP" and key != "MODEL":
+                print(f" - {key} steps: {layers_counter[key] * self.epochs}")
+
+        print("")
+        print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n")
+
+        return
+
     def add_layer(self, layer):
-        if layer.layer_type != "RESET_layer" \
-                and layer.layer_type != "MODULATOR_layer" and layer.layer_type != "STEP_layer":
+        if layer.type != "RESET" and layer.type != "MODULATOR" and layer.type != "STEP":
             # --> Set layer ref
             self.layer_count += 1
-            layer.layer_ref = self.layer_count
+            layer.ref = self.layer_count
 
             # --> Set optimisation mode
             layer.optimisation_mode = self.optimisation_mode
@@ -63,24 +120,32 @@ class Model:
 
         return
 
+    def step(self, population, evaluation_function, epoch, max_epoch):
+        self.evaluation_function = evaluation_function
+
+        return self.train(population)
+
     def train(self, population):
-        print("\n")
-        print("--------------------------------------------------------------------------------------")
-        print(self.__str__())
+        if self.verbose == 1:
+            print("\n")
+            print("--------------------------------------------------------------------------------------")
+            self.summary()
 
         evaluation_function = self.evaluation_function
         population = Population(population)
 
         # ----- Perform training
         for epoch in range(self.epochs):
-            print(f"============================================= Epoch {epoch + 1}")
+            if self.verbose == 1:
+                print(f"============================================= Epoch {epoch + 1}")
+
             # --> Set trackers to default
             step_tracker = epoch
             max_step_tracker = self.epochs
 
             for layer in self.layers:
                 # --> Process reset layer
-                if layer.layer_type == "RESET_layer":
+                if layer.type == "RESET":
                     evaluation_function_bool, step_tracker_bool, max_step_tracker_bool = layer.step()
 
                     if evaluation_function_bool:
@@ -93,7 +158,7 @@ class Model:
                         max_step_tracker = self.epochs
 
                 # --> Process modulator layer
-                elif layer.layer_type == "MODULATOR_layer":
+                elif layer.type == "MODULATOR":
                     population, evaluation_function, step_tracker, max_step_tracker = layer.step(population=population,
                                                                                                  evaluation_function=evaluation_function,
                                                                                                  epoch=step_tracker,
@@ -106,58 +171,62 @@ class Model:
                                             epoch=step_tracker,
                                             max_epoch=max_step_tracker)
 
-        print("\n")
-        print("Training complete")
-        print("--------------------------------------------------------------------------------------")
+        # ----- Summaries training results
+        if self.verbose == 1:
+            print("\n")
+            print("Training complete")
+            print("--------------------------------------------------------------------------------------")
 
-        # --> Evaluate population
-        fitness_evaluation = population.get_fitness_evaluation(evaluation_function=evaluation_function,
-                                                               optimisation_mode=self.optimisation_mode)
+            # --> Evaluate population
+            fitness_evaluation = population.get_fitness_evaluation(evaluation_function=evaluation_function,
+                                                                   optimisation_mode=self.optimisation_mode)
 
-        if self.optimisation_mode == "max":
-            fitness_evaluation.sort()
+            print("\n")
+            print("Best solution fitness:", population.best_fitness_history[-1])
 
-        elif self.optimisation_mode == "min":
-            fitness_evaluation.sort(reverse=True)
-
-        else:
-            print("!!! Invalid Optimisation mode selected !!!")
-
-        print("\n")
-        print("Best solution fitness:", fitness_evaluation[-1])
-        # print("Best solution fitness history:", population.best_fitness_history)
-
-        print("Population avg fitness:", sum(fitness_evaluation)/len(fitness_evaluation))
-        print("Population avg age:", sum(population.get_individual_ages())/len(population.get_individual_ages()))
+            print("Population avg fitness:", sum(fitness_evaluation)/len(fitness_evaluation))
+            print("Population avg age:", sum(population.get_individual_ages())/len(population.get_individual_ages()))
 
         return population
 
 
 if __name__ == "__main__":
-    from src.Building_blocks.Layers.Reset_layer import RESET_layer
-    from src.Building_blocks.Layers.Modulator_layer import MODULATOR_layer
     from src.Building_blocks.Layers.Evolutionary_layer import EVO_layer
     from src.Building_blocks.Layers.Particle_swarm_optimisation_layer import PSO_Layer
 
-    from src.Random.Individual_1 import Indvidual_1
-    from src.Random.Evaluation_function_1 import param_sum
-    from src.Random.Parameter_randomiser_1 import Randomiser_1
-    from src.Random.VISU_layer_1 import VISU_layer_1
-
-    from src.Random.Rastrigin_Individual import Rastrigin_Indvidual
-    from src.Random.Rastrigin_function import Rastrigin_function
-    from src.Random.Rastrigin_Parameter_randomiser import Rastrigin_randomiser
-    from src.Random.Rastrigin_VISU_layer import Rastrigin_VISU_layer
+    from src.Random.Rastrigin.Rastrigin_Individual import Rastrigin_Indvidual
+    from src.Random.Rastrigin.Rastrigin_function import Rastrigin_function
+    from src.Random.Rastrigin.Rastrigin_Parameter_randomiser import Rastrigin_randomiser
+    from src.Random.Rastrigin.Rastrigin_VISU_layer import Rastrigin_VISU_layer
 
     individual_template = Rastrigin_Indvidual
     randomiser = Rastrigin_randomiser
-    evaluation_function = Rastrigin_function
+    function = Rastrigin_function
 
     # --> Construct model
-    my_model = Model(evaluation_function=evaluation_function,
+    sub_model = Model(evaluation_function=function,
+                      optimisation_mode="min",
+                      layers=[],
+                      epochs=10)
+
+    sub_model.add_layer(PSO_Layer(parameter_randomiser=randomiser,
+                                  inertia_weight=0.729,
+                                  cognitive_weight=1.49445,
+                                  social_weight=1.49445,
+                                  verbose=0))
+
+    sub_model.add_layer(PSO_Layer(parameter_randomiser=randomiser,
+                                  inertia_weight=0.729,
+                                  cognitive_weight=1.49445,
+                                  social_weight=1.49445,
+                                  verbose=0))
+
+    # ------------------ Main model
+    my_model = Model(evaluation_function=function,
                      optimisation_mode="min",
                      layers=[],
-                     epochs=1000)
+                     epochs=10,
+                     verbose=1)
 
     my_model.add_layer(EVO_layer(individual_template=individual_template,
                                  parameter_randomiser=randomiser,
@@ -166,11 +235,7 @@ if __name__ == "__main__":
                                  percent_random_ind_in_next_gen=0.3,
                                  verbose=0))
 
-    my_model.add_layer(PSO_Layer(parameter_randomiser=randomiser,
-                                 inertia_weight=0.729,
-                                 cognitive_weight=1.49445,
-                                 social_weight=1.49445,
-                                 verbose=0))
+    # my_model.add_layer(Rastrigin_VISU_layer(plot_rate=1))
 
     my_model.add_layer(PSO_Layer(parameter_randomiser=randomiser,
                                  inertia_weight=0.729,
@@ -178,11 +243,9 @@ if __name__ == "__main__":
                                  social_weight=1.49445,
                                  verbose=0))
 
-    my_model.add_layer(PSO_Layer(parameter_randomiser=randomiser,
-                                 inertia_weight=0.729,
-                                 cognitive_weight=1.49445,
-                                 social_weight=1.49445,
-                                 verbose=0))
+    # my_model.add_layer(Rastrigin_VISU_layer(plot_rate=1))
+
+    my_model.add_layer(sub_model)
 
     my_model.add_layer(PSO_Layer(parameter_randomiser=randomiser,
                                  inertia_weight=0.729,
@@ -190,8 +253,7 @@ if __name__ == "__main__":
                                  social_weight=1.49445,
                                  verbose=0))
 
-    # my_model.add_layer(VISU_layer_1(plot_rate=1))
-    my_model.add_layer(Rastrigin_VISU_layer(plot_rate=999))
+    # my_model.add_layer(Rastrigin_VISU_layer(plot_rate=1))
 
     # my_model.add_layer(MODULATOR_layer(new_evaluation_function=None,
     #                                    new_step=10,

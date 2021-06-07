@@ -40,12 +40,15 @@ class EVO_layer(Layer):
                  optimisation_mode="max",
                  verbose=0,
                  name=""):
-        super().__init__(name=name)
+        # --> Meta
+        self.ref = ""
+        self.type = "EVO"
+        self.name = name
 
-        self.layer_type = "EVO_layer"
         self.verbose = verbose
         self.optimisation_mode = optimisation_mode
 
+        # --> Settings
         self.parameter_randomiser = parameter_randomiser
 
         self.individual_template = individual_template
@@ -65,12 +68,12 @@ class EVO_layer(Layer):
         settings_option_lists = json.load(open(r"src/Configuration_management/Settings_option_list.json"))
         selection_method = settings_option_lists["parents_selection_methods"][self.selection_method]
 
-        if self.layer_name != "":
-            layer_name = f"{self.layer_name} - "
+        if self.name != "":
+            layer_name = f"{self.name} - "
         else:
             layer_name = ""
 
-        return f"> {self.layer_type} - " + layer_name + \
+        return f"> {self.type} - " + layer_name + \
                f"Optimiser mode: {self.optimisation_mode}, " \
                f"Parents: {self.percent_parents * 100}%, " \
                f"Parents in next gen: {self.percent_parents_in_next_gen * 100}%, " \
@@ -143,6 +146,8 @@ class EVO_layer(Layer):
                 cycling = 0
 
             offspring = deepcopy(parents[cycling])
+
+            # Reset offspring fitness history
             offspring.fitness_history = []
 
             # Mutate offspring

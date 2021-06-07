@@ -5,21 +5,15 @@
 """
 
 # Built-in/Generic Imports
-import sys
-import random
-import json
-from copy import deepcopy
 
 # Libs
 import numpy as np
 import matplotlib.pyplot as plt
-from matplotlib import cm
-from mpl_toolkits.mplot3d import Axes3D
 
 # Own modules
 from src.Building_blocks.Layers.Step_layer import STEP_layer
-from src.Random.Rastrigin_Individual import Rastrigin_Indvidual
-from src.Random.Rastrigin_function import Rastrigin_function
+from src.Random.Rastrigin.Rastrigin_Individual import Rastrigin_Indvidual
+from src.Random.Rastrigin.Rastrigin_function import Rastrigin_function
 
 
 __version__ = '1.1.1'
@@ -63,6 +57,7 @@ class Rastrigin_VISU_layer(STEP_layer):
 
             ax.scatter(x_population, y_population, z_population, color="blue")
 
+            ax.view_init(elev=-90, azim=0)
             plt.show()
 
         return population
@@ -70,7 +65,7 @@ class Rastrigin_VISU_layer(STEP_layer):
 
 if __name__ == "__main__":
     my_solutions = []
-    for _ in range(100):
+    for _ in range(10):
         my_solutions.append(Rastrigin_Indvidual())
 
     Rastrigin_VISU_layer().step(my_solutions, "", 10, "")
