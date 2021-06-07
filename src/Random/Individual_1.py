@@ -7,8 +7,12 @@ Placeholder layer used to signal to model to reset run parameters to default
 # Built-in/Generic Imports
 import random
 
+# Libs
+from faker import Faker
+
 # Own modules
 from src.Building_blocks.abc_Individual import Individual
+
 
 __version__ = '1.1.1'
 __author__ = 'Victor Guillet'
@@ -28,6 +32,8 @@ class Indvidual_1(Individual):
                               "b": random.randint(0, 100),
                               "c": random.randint(0, 100),
                               "d": random.randint(0, 100)}
+
+        # self.name = Faker().name()
 
         return
 

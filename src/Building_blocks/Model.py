@@ -104,10 +104,12 @@ class Model:
 
         # --> Evaluate population
         fitness_evaluation = population.get_fitness_evaluation(evaluation_function)
-        fitness_evaluation.sort()
+        fitness_evaluation.sort(reverse=True)
 
         print("\n")
         print("Best solution fitness:", max(fitness_evaluation))
+        print("Best solution fitness history:", population.best_fitness_history)
+
         print("Population fitness:", fitness_evaluation)
         print("Population age:", population.get_individual_ages())
 
@@ -118,6 +120,7 @@ if __name__ == "__main__":
     from src.Building_blocks.Layers.Reset_layer import RESET_layer
     from src.Building_blocks.Layers.Modulator_layer import MODULATOR_layer
     from src.Building_blocks.Layers.Evolutionary_layer import EVO_layer
+    from src.Building_blocks.Layers.Particle_swarm_optimisation_layer import PSO_Layer
 
     from src.Random.Evaluation_function_1 import param_sum
     from src.Random.Individual_1 import Indvidual_1
@@ -126,7 +129,7 @@ if __name__ == "__main__":
     # --> Construct model
     my_model = Model(evaluation_function=param_sum,
                      layers=[],
-                     epochs=10)
+                     epochs=100)
 
     my_model.add_layer(EVO_layer(individual_template=Indvidual_1,
                                  parameter_randomiser=Randomiser_1,
@@ -135,15 +138,21 @@ if __name__ == "__main__":
                                  percent_random_ind_in_next_gen=0.3,
                                  verbose=1))
 
+    # my_model.add_layer(PSO_Layer(parameter_randomiser=Randomiser_1,
+    #                              inertia_weight=0.729,
+    #                              cognitive_weight=1.49445,
+    #                              social_weight=1.49445,
+    #                              verbose=1))
+
     my_model.add_layer(MODULATOR_layer(new_evaluation_function=None,
                                        new_step=10,
                                        new_max_step=100,
-                                       verbose=1))
+                                       verbose=0))
 
     my_model.add_layer(RESET_layer(evaluation_function_bool=False,
                                    step_bool=True,
                                    max_step_bool=True,
-                                   verbose=1))
+                                   verbose=0))
 
     # --> Create solution population
     my_solutions = []

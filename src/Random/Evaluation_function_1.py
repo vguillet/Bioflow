@@ -17,9 +17,9 @@ __date__ = '10/09/2019'
 
 
 def param_sum(individual):
-    total = 0
-
-    for parameter in individual.parameter_set.values():
-        total += parameter
+    total = - (individual.parameter_set["a"]
+            - individual.parameter_set["b"]
+            - 10 * individual.parameter_set["c"]
+            + 0 * individual.parameter_set["d"])**2
 
     return total

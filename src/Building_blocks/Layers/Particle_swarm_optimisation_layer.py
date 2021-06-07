@@ -58,7 +58,7 @@ class PSO_Layer(Layer):
         return f"> {self.layer_type} - " \
                f"Inertia weight: {self.inertia_weight}, " \
                f"Cognitive weight: {self.cognitive_weight}, " \
-               f"Social weight: {self.social_weight}, "
+               f"Social weight: {self.social_weight}"
 
     def step(self, population, evaluation_function, epoch, max_epoch):
         # --> Evaluate population
@@ -67,5 +67,12 @@ class PSO_Layer(Layer):
         # Find max fitness
         # Determine individual parameters difference percentage between max fitness sol and all other sol
         # Solve for
+
+        if self.verbose == 1:
+            print(f"---- << PSO layer >> ----")
+            print(f" Inertia weight: {self.inertia_weight}")
+            print(f" Cognitive weight: {self.cognitive_weight}")
+            print(f" Social weight: {self.social_weight}")
+            print("\n")
 
         return population

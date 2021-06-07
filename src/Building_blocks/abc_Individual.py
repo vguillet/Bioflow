@@ -23,7 +23,6 @@ __date__ = '10/09/2019'
 class Individual(ABC):
     def __init__(self):
 
-        self.fitness_history = None
         self.fitness_history = []
 
         self.parameter_set = None

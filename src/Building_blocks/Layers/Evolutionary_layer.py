@@ -85,21 +85,19 @@ class EVO_layer(Layer):
         # ----- Select parents
         parents = []
 
-        # --> Determine fitness ratio
-        fitness_ratios = []
-        for i in range(len(fitness_evaluation)):
-            fitness_ratios.append(fitness_evaluation[i] / sum(fitness_evaluation) * 100)
-
         # --> Select individuals
         # TODO: Implement alternative selection methods
         # Elitic selection
         if self.selection_method == 0:
-            # Use bubblesort to sort population, fitness_evaluation, and fitness_ratios according to fitness_ratio
-            for _ in range(len(fitness_ratios)):
-                for i in range(len(fitness_ratios) - 1):
-                    if fitness_ratios[i] < fitness_ratios[i + 1]:
-                        fitness_ratios[i], fitness_ratios[i + 1] = fitness_ratios[i + 1], fitness_ratios[i]
+            # Use bubblesort to sort population and fitness_evaluation according to fitness_evaluation
+            # -> Sorting from large to small
+            for _ in range(len(fitness_evaluation)):
+                for i in range(len(fitness_evaluation) - 1):
+                    if fitness_evaluation[i] < fitness_evaluation[i + 1]:
+                        # Reorder population
                         population[i], population[i + 1] = population[i + 1], population[i]
+
+                        # Reorder fitness evaluation
                         fitness_evaluation[i], fitness_evaluation[i + 1] = fitness_evaluation[i + 1], fitness_evaluation[i]
 
             for i in range(parents_count):
@@ -125,6 +123,7 @@ class EVO_layer(Layer):
                 cycling = 0
 
             offspring = deepcopy(parents[cycling])
+            offspring.fitness_history = []
 
             # Mutate offspring
             for _ in range(nb_of_parameters_to_mutate):
