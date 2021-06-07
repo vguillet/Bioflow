@@ -15,9 +15,7 @@ from flatten_dict import unflatten
 
 # Own modules
 from src.Building_blocks.Layers.abc_Layer import Layer
-from src.Tools.Parameter_tools import select_random_parameter_to_modify, get_from_dict, add_in_dict
-from src.Building_blocks.Population import Population
-
+from src.Tools.Parameter_tools import get_from_dict, add_in_dict
 
 __version__ = '1.1.1'
 __author__ = 'Victor Guillet'
@@ -41,6 +39,7 @@ class PSO_Layer(Layer):
                  optimisation_mode="max",
                  verbose=0,
                  name="Layer"):
+
         # --> Meta
         self.ref = ""
         self.type = "PSO"
@@ -67,9 +66,10 @@ class PSO_Layer(Layer):
                f"Cognitive weight: {self.cognitive_weight}, " \
                f"Social weight: {self.social_weight}"
 
-    def step(self, population, evaluation_function, epoch, max_epoch):
+    def step(self, population, evaluation_function, epoch, max_epoch, data=None):
         # --> Evaluate population (record fitness of population)
         population.get_fitness_evaluation(evaluation_function=evaluation_function,
+                                          data=data,
                                           optimisation_mode=self.optimisation_mode)
 
         # --> Add velocity property to individuals if missing

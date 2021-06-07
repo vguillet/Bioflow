@@ -23,6 +23,7 @@ class MODULATOR_layer(Layer):
                  new_max_step=None,
                  verbose=0,
                  name=""):
+
         # --> Meta
         self.ref = "      "
         self.type = "MODULATOR"
@@ -38,14 +39,9 @@ class MODULATOR_layer(Layer):
         return
 
     def __str__(self):
-        if self.name != "":
-            layer_name = f" - {self.name}"
-        else:
-            layer_name = ""
+        return f"  -> {self.name} ({self.type})"
 
-        return f"> {self.name} ({self.type})"
-
-    def step(self, population, evaluation_function, epoch, max_epoch):
+    def step(self, population, evaluation_function, epoch, max_epoch, data=None):
 
         if self.new_evaluation_function is not None:
             evaluation_function = self.new_evaluation_function

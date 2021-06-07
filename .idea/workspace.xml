@@ -50,22 +50,46 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="com.intellij.ide.scratch.LRUPopupBuilder$1/New Scratch File" value="JupyterPython" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/Building_blocks/Layers" />
-    <property name="settings.editor.selected.configurable" value="PyScientificConfigurable" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../Phytrade/src/Algorithmic_trading/Signal_optimisation/BIOflow" />
+    <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
+    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PythonContentEntriesConfigurable" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\victo\OneDrive\Repositories\Python\Phytrade\src\Algorithmic_trading\Signal_optimisation\BIOflow" />
+      <recent name="C:\Users\victo\OneDrive\Repositories\Python\Phytrade" />
       <recent name="C:\Users\victo\OneDrive\Repositories\Python\Bio_lib\src\Building_blocks\Layers" />
       <recent name="C:\Users\victo\OneDrive\Repositories\Python\Bio_lib\src\Random" />
       <recent name="C:\Users\victo\OneDrive\Repositories\Python\Bio_lib\src\Configuration_management" />
-      <recent name="C:\Users\victo\OneDrive\Repositories\Python\Bio_lib\src\Tools" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\victo\OneDrive\Repositories\Python\Bio_lib\src\Random\Rastrigin" />
       <recent name="C:\Users\victo\OneDrive\Repositories\Python\Bio_lib\src\Random\Test_function" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.Dev_menu">
+  <component name="RunManager" selected="Python.Dev_menu (1)">
+    <configuration name="Dev_menu (1)" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="Steffegium" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/../Phytrade" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/../Phytrade/Dev_menu.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <configuration name="Dev_menu" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="Bio_lib" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -105,28 +129,6 @@
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="true" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
-    <configuration name="Population" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
-      <module name="Bio_lib" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/src/Building_blocks" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/src/Building_blocks/Population.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
       <option name="MODULE_MODE" value="false" />
       <option name="REDIRECT_INPUT" value="false" />
       <option name="INPUT_FILE" value="" />
@@ -179,17 +181,17 @@
     <list>
       <item itemvalue="Python.Model" />
       <item itemvalue="Python.scratch" />
-      <item itemvalue="Python.Population" />
       <item itemvalue="Python.Rastrigin_VISU_layer" />
       <item itemvalue="Python.Dev_menu" />
+      <item itemvalue="Python.Dev_menu (1)" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.Dev_menu (1)" />
         <item itemvalue="Python.Dev_menu" />
         <item itemvalue="Python.Model" />
         <item itemvalue="Python.Rastrigin_VISU_layer" />
         <item itemvalue="Python.scratch" />
-        <item itemvalue="Python.Population" />
       </list>
     </recent_temporary>
   </component>
@@ -204,7 +206,9 @@
       <workItem from="1622733590409" duration="631000" />
       <workItem from="1622791038206" duration="33010000" />
       <workItem from="1623052315476" duration="2162000" />
-      <workItem from="1623054515463" duration="32260000" />
+      <workItem from="1623054515463" duration="34486000" />
+      <workItem from="1623092705329" duration="1212000" />
+      <workItem from="1623093989165" duration="7867000" />
     </task>
     <servers />
   </component>
@@ -213,10 +217,11 @@
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/Bio_lib$scratch.coverage" NAME="scratch Coverage Results" MODIFIED="1622821631865" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$APPLICATION_CONFIG_DIR$/scratches" />
-    <SUITE FILE_PATH="coverage/Bio_lib$Dev_menu.coverage" NAME="Dev_menu Coverage Results" MODIFIED="1623090386502" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Bio_lib$Dev_menu.coverage" NAME="Dev_menu Coverage Results" MODIFIED="1623106085531" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/Bio_lib$Phytrade_launcher.coverage" NAME="Phytrade_launcher Coverage Results" MODIFIED="1622792785765" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/../Phytrade" />
     <SUITE FILE_PATH="coverage/Bio_lib$Population.coverage" NAME="Population Coverage Results" MODIFIED="1622813625075" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src/Building_blocks" />
     <SUITE FILE_PATH="coverage/Bio_lib$Model.coverage" NAME="Model Coverage Results" MODIFIED="1623079868950" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/Bio_lib$Rastrigin_VISU_layer.coverage" NAME="Rastrigin_VISU_layer Coverage Results" MODIFIED="1623062751465" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src/Random" />
+    <SUITE FILE_PATH="coverage/Bio_lib$Dev_menu__1_.coverage" NAME="Dev_menu (1) Coverage Results" MODIFIED="1623107135504" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/../Phytrade" />
   </component>
 </project>

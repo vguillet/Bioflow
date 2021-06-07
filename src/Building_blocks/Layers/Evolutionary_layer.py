@@ -40,6 +40,7 @@ class EVO_layer(Layer):
                  optimisation_mode="max",
                  verbose=0,
                  name="Layer"):
+
         # --> Meta
         self.ref = ""
         self.type = "EVO"
@@ -65,7 +66,7 @@ class EVO_layer(Layer):
 
     def __str__(self):
 
-        settings_option_lists = json.load(open(r"src/Configuration_management/Settings_option_list.json"))
+        settings_option_lists = json.load(open(r"src/Algorithmic_trading/Configuration_management/Settings_option_list.json"))
         selection_method = settings_option_lists["parents_selection_methods"][self.selection_method]
 
         return f"       {self.name} ({self.type})        " + \
@@ -76,10 +77,11 @@ class EVO_layer(Layer):
                f"Mutation rate: {self.mutation_rate * 100}, " \
                f"Selection method: {selection_method}"
 
-    def step(self, population, evaluation_function, epoch, max_epoch):
+    def step(self, population, evaluation_function, epoch, max_epoch, data=None):
 
         # --> Evaluate population
         fitness_evaluation = population.get_fitness_evaluation(evaluation_function=evaluation_function,
+                                                               data=data,
                                                                optimisation_mode=self.optimisation_mode)
 
         parents_count = round(len(population) * self.percent_parents)

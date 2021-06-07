@@ -120,12 +120,12 @@ class Model(Layer):
 
         return
 
-    def step(self, population, evaluation_function, epoch, max_epoch):
+    def step(self, population, evaluation_function, epoch, max_epoch, data=None):
         self.evaluation_function = evaluation_function
 
-        return self.train(population)
+        return self.train(population, data=data)
 
-    def train(self, population):
+    def train(self, population, data=None):
         if self.verbose == 1:
             print("\n")
             print("--------------------------------------------------------------------------------------")
@@ -169,7 +169,8 @@ class Model(Layer):
                     population = layer.step(population=population,
                                             evaluation_function=evaluation_function,
                                             epoch=step_tracker,
-                                            max_epoch=max_step_tracker)
+                                            max_epoch=max_step_tracker,
+                                            data=data)
 
         # ----- Summaries training results
         if self.verbose == 1:
@@ -179,6 +180,7 @@ class Model(Layer):
 
             # --> Evaluate population
             fitness_evaluation = population.get_fitness_evaluation(evaluation_function=evaluation_function,
+                                                                   data=data,
                                                                    optimisation_mode=self.optimisation_mode)
 
             print("")

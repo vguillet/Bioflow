@@ -23,6 +23,7 @@ class STEP_layer(Layer):
     def __init__(self,
                  verbose=0,
                  name=""):
+
         # --> Meta
         self.ref = "      "
         self.type = "STEP"
@@ -33,12 +34,7 @@ class STEP_layer(Layer):
         return
 
     def __str__(self):
-        if self.name != "":
-            layer_name = f" - {self.name}"
-        else:
-            layer_name = ""
+        return f"  -> {self.name} ({self.type})"
 
-        return f"> {self.name} ({self.type})"
-
-    def step(self, population, evaluation_function, epoch, max_epoch):
+    def step(self, population, evaluation_function, epoch, max_epoch, data=None):
         return population

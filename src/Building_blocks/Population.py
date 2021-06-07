@@ -28,12 +28,14 @@ class Population(list):
 
     def get_fitness_evaluation(self,
                                evaluation_function,
+                               data,
                                optimisation_mode="max"):
         fitness_evaluation = []
 
         for individual in self:
             # --> Evaluate individuals
-            individual_fitness = evaluation_function(individual)
+            individual_fitness = evaluation_function(individual=individual,
+                                                     data=data)
 
             # --> Record to individual history
             individual.fitness_history.append(individual_fitness)

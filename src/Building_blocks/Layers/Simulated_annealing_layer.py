@@ -38,6 +38,7 @@ class PSO_Layer(Layer):
                  optimisation_mode="max",
                  verbose=0,
                  name="Layer"):
+
         # --> Meta
         self.ref = ""
         self.type = "SA"
@@ -64,12 +65,11 @@ class PSO_Layer(Layer):
                f"Cognitive weight: {self.cognitive_weight}, " \
                f"Social weight: {self.social_weight}"
 
-    def step(self, population, evaluation_function, epoch, max_epoch):
+    def step(self, population, evaluation_function, epoch, max_epoch, data=None):
         # --> Evaluate population (record fitness of population)
         population.get_fitness_evaluation(evaluation_function=evaluation_function,
+                                          data=data,
                                           optimisation_mode=self.optimisation_mode)
-
-
 
         if self.verbose == 1:
             print(f"---- << SA layer >> ----")

@@ -16,6 +16,7 @@ from src.Random.Rastrigin.Rastrigin_Individual import Rastrigin_Indvidual
 from src.Random.Rastrigin.Rastrigin_function import Rastrigin_function
 from src.Random.Rastrigin.Rastrigin_Parameter_randomiser import Rastrigin_randomiser
 from src.Random.Rastrigin.Rastrigin_VISU_layer import Rastrigin_VISU_layer
+from src.Tools.Population_tools import gen_initial_population
 
 __version__ = '1.1.1'
 __author__ = 'Victor Guillet'
@@ -102,9 +103,8 @@ my_model.add_layer(PSO_Layer(parameter_randomiser=randomiser,
                              verbose=0))
 
 # --> Create solution population
-my_solutions = []
-for _ in range(100):
-    my_solutions.append(individual_template())
+my_solutions = gen_initial_population(individual_template=individual_template,
+                                      population_size=100)
 
 # --> Optimise solutions
 my_solutions = my_model.train(my_solutions)
