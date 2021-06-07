@@ -1,0 +1,12 @@
+.idea/*
+venv/*
+__pycache__/*
+
+API_keys/*
+API_keys.txt
+
+Cache/Console_log.log
+
+*.iml
+*.pyc
+
