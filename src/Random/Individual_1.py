@@ -28,10 +28,10 @@ class Indvidual_1(Individual):
         self.fitness_history = []
         self.nb_of_adjustable_parameters = 4
 
-        self.parameter_set = {"a": random.randint(0, 100),
-                              "b": random.randint(0, 100),
-                              "c": random.randint(0, 100),
-                              "d": random.randint(0, 100)}
+        self.parameter_set = {"a": random.randint(-100, 100),
+                              "b": random.randint(-100, 100),
+                              "c": random.randint(-100, 100),
+                              "d": random.randint(-100, 100)}
 
         # self.name = Faker().name()
 

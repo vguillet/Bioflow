@@ -121,6 +121,7 @@ if __name__ == "__main__":
     from src.Building_blocks.Layers.Modulator_layer import MODULATOR_layer
     from src.Building_blocks.Layers.Evolutionary_layer import EVO_layer
     from src.Building_blocks.Layers.Particle_swarm_optimisation_layer import PSO_Layer
+    from src.Random.Step_layer_1 import STEP_layer_1
 
     from src.Random.Evaluation_function_1 import param_sum
     from src.Random.Individual_1 import Indvidual_1
@@ -137,6 +138,8 @@ if __name__ == "__main__":
                                  percent_parents_in_next_gen=0.2,
                                  percent_random_ind_in_next_gen=0.3,
                                  verbose=1))
+
+    my_model.add_layer(STEP_layer_1())
 
     # my_model.add_layer(PSO_Layer(parameter_randomiser=Randomiser_1,
     #                              inertia_weight=0.729,
@@ -156,7 +159,7 @@ if __name__ == "__main__":
 
     # --> Create solution population
     my_solutions = []
-    for _ in range(10):
+    for _ in range(100):
         my_solutions.append(Indvidual_1())
 
     # --> Optimise solutions

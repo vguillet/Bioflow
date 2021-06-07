@@ -25,6 +25,6 @@ class Randomiser_1:
                      nb_of_generations,
                      parameters_decay_function):
 
-        offspring.parameter_set[parameter_to_modify] += random.randint(0, 10)
+        offspring.parameter_set[parameter_to_modify] += random.randint(-10, 10)
 
         return offspring

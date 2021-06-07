@@ -64,8 +64,12 @@ class PSO_Layer(Layer):
         # --> Evaluate population
         fitness_evaluation = population.get_fitness_evaluation(evaluation_function)
 
-        # Find max fitness
-        # Determine individual parameters difference percentage between max fitness sol and all other sol
+        # Find pop max fitness index
+        swarm_max_fitness_index = fitness_evaluation.index(max(fitness_evaluation))
+
+        # Determine individual parameters difference percentage between pop max fitness sol and all other sol
+
+
         # Solve for
 
         if self.verbose == 1:
