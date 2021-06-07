@@ -5,14 +5,10 @@
 """
 
 # Built-in/Generic Imports
-import json
-import random
 
 # Libs
 
 # Own modules
-from src.Tools.Population_tools import get_population_fitness_evaluation
-from src.Tools.Population_tools import get_population_age
 
 
 __version__ = '1.1.1'

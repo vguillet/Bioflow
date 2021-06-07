@@ -11,9 +11,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # Own modules
-from src.Building_blocks.Layers.Step_layer import STEP_layer
-from src.Random.Rastrigin.Rastrigin_Individual import Rastrigin_Indvidual
-from src.Random.Rastrigin.Rastrigin_function import Rastrigin_function
+from src.Building_blocks.Functional_layers.Step_layer import STEP_layer
+from Test_cases.Rastrigin.Rastrigin_Individual import Rastrigin_Indvidual
+from Test_cases.Rastrigin.Rastrigin_function import Rastrigin_function
 
 
 __version__ = '1.1.1'
@@ -31,7 +31,7 @@ class Rastrigin_VISU_layer(STEP_layer):
 
         self.plot_rate = plot_rate
 
-    def step(self, population, evaluation_function, epoch, max_epoch, data=None):
+    def step(self, population, evaluation_function, epoch, max_epoch, data=None, settings=None):
         if epoch % self.plot_rate == 0:
             x = np.linspace(-5.12, 5.12, 100)
             y = np.linspace(-5.12, 5.12, 100)

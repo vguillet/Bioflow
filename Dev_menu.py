@@ -5,18 +5,17 @@
 """
 
 # Built-in/Generic Imports
-import json
 
 # Own modules
 from src.Building_blocks.Model import Model
-from src.Building_blocks.Layers.Evolutionary_layer import EVO_layer
-from src.Building_blocks.Layers.Particle_swarm_optimisation_layer import PSO_Layer
+from src.Building_blocks.Algorithmic_layers.Evolutionary_layer import EVO_layer
+from src.Building_blocks.Algorithmic_layers.Particle_swarm_optimisation_layer import PSO_Layer
 
-from src.Random.Rastrigin.Rastrigin_Individual import Rastrigin_Indvidual
-from src.Random.Rastrigin.Rastrigin_function import Rastrigin_function
-from src.Random.Rastrigin.Rastrigin_Parameter_randomiser import Rastrigin_randomiser
-from src.Random.Rastrigin.Rastrigin_VISU_layer import Rastrigin_VISU_layer
-from src.Tools.Population_tools import gen_initial_population
+from Test_cases.Rastrigin.Rastrigin_Individual import Rastrigin_Indvidual
+from Test_cases.Rastrigin.Rastrigin_function import Rastrigin_function
+from Test_cases.Rastrigin.Rastrigin_Parameter_randomiser import Rastrigin_randomiser
+from Test_cases.Rastrigin.Rastrigin_VISU_layer import Rastrigin_VISU_layer
+from src.Building_blocks.Population_tools import gen_initial_population
 
 __version__ = '1.1.1'
 __author__ = 'Victor Guillet'

@@ -5,17 +5,15 @@
 """
 
 # Built-in/Generic Imports
-import json
 import random
 from copy import deepcopy
 
 # Libs
 from flatten_dict import flatten
-from flatten_dict import unflatten
 
 # Own modules
-from src.Building_blocks.Layers.abc_Layer import Layer
-from src.Tools.Parameter_tools import get_from_dict, add_in_dict
+from src.Building_blocks.abc_Layer import Layer
+from src.Building_blocks.Parameter_tools import get_from_dict, add_in_dict
 
 __version__ = '1.1.1'
 __author__ = 'Victor Guillet'
@@ -66,7 +64,7 @@ class PSO_Layer(Layer):
                f"Cognitive weight: {self.cognitive_weight}, " \
                f"Social weight: {self.social_weight}"
 
-    def step(self, population, evaluation_function, epoch, max_epoch, data=None):
+    def step(self, population, evaluation_function, epoch, max_epoch, data=None, settings=None):
         # --> Evaluate population (record fitness of population)
         population.get_fitness_evaluation(evaluation_function=evaluation_function,
                                           data=data,

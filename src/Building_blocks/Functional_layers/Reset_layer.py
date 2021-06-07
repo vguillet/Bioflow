@@ -7,7 +7,7 @@ Placeholder layer used to signal to model to reset run parameters to default
 # Built-in/Generic Imports
 
 # Own modules
-from src.Building_blocks.Layers.abc_Layer import Layer
+from src.Building_blocks.abc_Layer import Layer
 
 __version__ = '1.1.1'
 __author__ = 'Victor Guillet'
@@ -41,7 +41,7 @@ class RESET_layer(Layer):
     def __str__(self):
         return f"  -> {self.name} ({self.type})"
 
-    def step(self, population=None, evaluation_function=None, epoch=None, max_epoch=None, data=None):
+    def step(self, population=None, evaluation_function=None, epoch=None, max_epoch=None, data=None, settings=None):
         if self.verbose == 1:
             print(f"---- << RESET layer >> ----")
             print(f" Reset evaluation function: {self.evaluation_function_bool}")

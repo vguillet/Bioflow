@@ -6,14 +6,13 @@
 
 # Built-in/Generic Imports
 import sys
-import random
 import json
 from copy import deepcopy
 
 # Own modules
-from src.Building_blocks.Layers.abc_Layer import Layer
+from src.Building_blocks.abc_Layer import Layer
 from src.Building_blocks.Population import Population
-from src.Tools.Parameter_tools import select_random_parameter_to_modify
+from src.Building_blocks.Parameter_tools import select_random_parameter_to_modify
 
 
 __version__ = '1.1.1'
@@ -66,7 +65,7 @@ class EVO_layer(Layer):
 
     def __str__(self):
 
-        settings_option_lists = json.load(open(r"src/Algorithmic_trading/Configuration_management/Settings_option_list.json"))
+        settings_option_lists = json.load(open(r"src/Configuration_management/Settings_option_list.json"))
         selection_method = settings_option_lists["parents_selection_methods"][self.selection_method]
 
         return f"       {self.name} ({self.type})        " + \
@@ -77,7 +76,7 @@ class EVO_layer(Layer):
                f"Mutation rate: {self.mutation_rate * 100}, " \
                f"Selection method: {selection_method}"
 
-    def step(self, population, evaluation_function, epoch, max_epoch, data=None):
+    def step(self, population, evaluation_function, epoch, max_epoch, data=None, settings=None):
 
         # --> Evaluate population
         fitness_evaluation = population.get_fitness_evaluation(evaluation_function=evaluation_function,

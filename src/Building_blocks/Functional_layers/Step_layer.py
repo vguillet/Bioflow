@@ -9,7 +9,7 @@ STEP layer base class, to be used as parent to build STEP layers
 # Libs
 
 # Own modules
-from src.Building_blocks.Layers.abc_Layer import Layer
+from src.Building_blocks.abc_Layer import Layer
 
 __version__ = '1.1.1'
 __author__ = 'Victor Guillet'
@@ -36,5 +36,5 @@ class STEP_layer(Layer):
     def __str__(self):
         return f"  -> {self.name} ({self.type})"
 
-    def step(self, population, evaluation_function, epoch, max_epoch, data=None):
+    def step(self, population, evaluation_function, epoch, max_epoch, data=None, settings=None):
         return population

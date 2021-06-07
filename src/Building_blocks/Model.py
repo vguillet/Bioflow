@@ -9,7 +9,7 @@
 # Libs
 
 # Own modules
-from src.Building_blocks.Layers.abc_Layer import Layer
+from src.Building_blocks.abc_Layer import Layer
 from src.Building_blocks.Population import Population
 
 
@@ -120,12 +120,12 @@ class Model(Layer):
 
         return
 
-    def step(self, population, evaluation_function, epoch, max_epoch, data=None):
+    def step(self, population, evaluation_function, epoch, max_epoch, data=None, settings=None):
         self.evaluation_function = evaluation_function
 
-        return self.train(population, data=data)
+        return self.train(population, data=data, settings=None)
 
-    def train(self, population, data=None):
+    def train(self, population, data=None, settings=None):
         if self.verbose == 1:
             print("\n")
             print("--------------------------------------------------------------------------------------")
@@ -162,7 +162,9 @@ class Model(Layer):
                     population, evaluation_function, step_tracker, max_step_tracker = layer.step(population=population,
                                                                                                  evaluation_function=evaluation_function,
                                                                                                  epoch=step_tracker,
-                                                                                                 max_epoch=max_step_tracker)
+                                                                                                 max_epoch=max_step_tracker,
+                                                                                                 data=data,
+                                                                                                 settings=settings)
 
                 # --> Process all other layer
                 else:
@@ -170,7 +172,8 @@ class Model(Layer):
                                             evaluation_function=evaluation_function,
                                             epoch=step_tracker,
                                             max_epoch=max_step_tracker,
-                                            data=data)
+                                            data=data,
+                                            settings=None)
 
         # ----- Summaries training results
         if self.verbose == 1:

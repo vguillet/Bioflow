@@ -5,16 +5,12 @@
 """
 
 # Built-in/Generic Imports
-import sys
-import random
-import json
-from copy import deepcopy
 
 # Libs
 import matplotlib.pyplot as plt
 
 # Own modules
-from src.Building_blocks.Layers.Step_layer import STEP_layer
+from src.Building_blocks.Functional_layers.Step_layer import STEP_layer
 
 
 __version__ = '1.1.1'

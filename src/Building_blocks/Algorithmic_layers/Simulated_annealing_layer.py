@@ -5,16 +5,11 @@
 """
 
 # Built-in/Generic Imports
-import json
-import random
 
 # Libs
 
 # Own modules
-from src.Building_blocks.Layers.abc_Layer import Layer
-from src.Tools.Parameter_tools import select_random_parameter_to_modify
-from src.Building_blocks.Population import Population
-
+from src.Building_blocks.abc_Layer import Layer
 
 __version__ = '1.1.1'
 __author__ = 'Victor Guillet'
@@ -65,7 +60,7 @@ class PSO_Layer(Layer):
                f"Cognitive weight: {self.cognitive_weight}, " \
                f"Social weight: {self.social_weight}"
 
-    def step(self, population, evaluation_function, epoch, max_epoch, data=None):
+    def step(self, population, evaluation_function, epoch, max_epoch, data=None, settings=None):
         # --> Evaluate population (record fitness of population)
         population.get_fitness_evaluation(evaluation_function=evaluation_function,
                                           data=data,

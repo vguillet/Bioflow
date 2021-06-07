@@ -32,5 +32,5 @@ class Layer(ABC):
         return
 
     @abstractmethod
-    def step(self, population, evaluation_function, epoch, max_epoch, data=None):
+    def step(self, population, evaluation_function, epoch, max_epoch, data=None, settings=None):
         return population

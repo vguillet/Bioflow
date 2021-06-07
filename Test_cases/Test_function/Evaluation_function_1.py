@@ -9,7 +9,6 @@
 # Libs
 
 # Own modules
-from src.Building_blocks.Layers.abc_Layer import Layer
 
 __version__ = '1.1.1'
 __author__ = 'Victor Guillet'
