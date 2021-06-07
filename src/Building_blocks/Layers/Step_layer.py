@@ -26,10 +26,12 @@ __date__ = '10/09/2019'
 
 
 class STEP_layer(Layer):
-    def __init__(self, verbose=0):
-        super().__init__()
+    def __init__(self,
+                 verbose=0,
+                 name=""):
+        super().__init__(name=name)
 
-        self.layer_ref = None
+        self.layer_ref = "      "
         self.layer_type = "STEP_layer"
 
         self.verbose = verbose
@@ -37,7 +39,12 @@ class STEP_layer(Layer):
         return
 
     def __str__(self):
-        return f"> {self.layer_type}"
+        if self.layer_name != "":
+            layer_name = f" - {self.layer_name}"
+        else:
+            layer_name = ""
+
+        return f"> {self.layer_type}" + layer_name
 
     def step(self, population, evaluation_function, epoch, max_epoch):
         return population

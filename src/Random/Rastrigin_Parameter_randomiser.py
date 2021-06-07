@@ -7,12 +7,8 @@ Placeholder layer used to signal to model to reset run parameters to default
 # Built-in/Generic Imports
 import random
 
-# Libs
-from faker import Faker
-
 # Own modules
 from src.Building_blocks.abc_Individual import Individual
-
 
 __version__ = '1.1.1'
 __author__ = 'Victor Guillet'
@@ -21,19 +17,14 @@ __date__ = '10/09/2019'
 ################################################################################################################
 
 
-class Indvidual_1(Individual):
-    def __init__(self):
-        super().__init__()
+class Rastrigin_randomiser:
+    @staticmethod
+    def modify_param(offspring,
+                     parameter_to_modify,
+                     current_generation,
+                     nb_of_generations,
+                     parameters_decay_function):
 
-        self.nb_of_adjustable_parameters = 4
-        self.parameter_set = {"a": random.randint(-100, 100),
-                              "b": random.randint(-100, 100),
-                              "c": random.randint(-100, 100),
-                              "d": random.randint(-100, 100)}
+        offspring.parameter_set[parameter_to_modify] += random.randint(-1, 1)
 
-        # self.name = Faker().name()
-
-        return
-
-    def gen_parameter_set(self):
-        return
+        return offspring

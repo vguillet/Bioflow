@@ -50,11 +50,12 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="com.intellij.ide.scratch.LRUPopupBuilder$1/New Scratch File" value="JupyterPython" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/Configuration_management" />
-    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/Random" />
+    <property name="settings.editor.selected.configurable" value="PyScientificConfigurable" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\victo\OneDrive\Repositories\Python\Bio_lib\src\Random" />
       <recent name="C:\Users\victo\OneDrive\Repositories\Python\Bio_lib\src\Configuration_management" />
       <recent name="C:\Users\victo\OneDrive\Repositories\Python\Bio_lib\src\Tools" />
     </key>
@@ -126,6 +127,28 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <configuration name="Rastrigin_VISU_layer" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="Bio_lib" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/src/Random" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/src/Random/Rastrigin_VISU_layer.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <configuration name="scratch" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="Bio_lib" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -153,10 +176,12 @@
       <item itemvalue="Python.Phytrade_launcher" />
       <item itemvalue="Python.scratch" />
       <item itemvalue="Python.Population" />
+      <item itemvalue="Python.Rastrigin_VISU_layer" />
     </list>
     <recent_temporary>
       <list>
         <item itemvalue="Python.Model" />
+        <item itemvalue="Python.Rastrigin_VISU_layer" />
         <item itemvalue="Python.scratch" />
         <item itemvalue="Python.Population" />
         <item itemvalue="Python.Phytrade_launcher" />
@@ -174,7 +199,7 @@
       <workItem from="1622733590409" duration="631000" />
       <workItem from="1622791038206" duration="33010000" />
       <workItem from="1623052315476" duration="2162000" />
-      <workItem from="1623054515463" duration="2240000" />
+      <workItem from="1623054515463" duration="10597000" />
     </task>
     <servers />
   </component>
@@ -185,6 +210,7 @@
     <SUITE FILE_PATH="coverage/Bio_lib$scratch.coverage" NAME="scratch Coverage Results" MODIFIED="1622821631865" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$APPLICATION_CONFIG_DIR$/scratches" />
     <SUITE FILE_PATH="coverage/Bio_lib$Phytrade_launcher.coverage" NAME="Phytrade_launcher Coverage Results" MODIFIED="1622792785765" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/../Phytrade" />
     <SUITE FILE_PATH="coverage/Bio_lib$Population.coverage" NAME="Population Coverage Results" MODIFIED="1622813625075" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src/Building_blocks" />
-    <SUITE FILE_PATH="coverage/Bio_lib$Model.coverage" NAME="Model Coverage Results" MODIFIED="1623056665060" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Bio_lib$Model.coverage" NAME="Model Coverage Results" MODIFIED="1623065180769" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Bio_lib$Rastrigin_VISU_layer.coverage" NAME="Rastrigin_VISU_layer Coverage Results" MODIFIED="1623062751465" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src/Random" />
   </component>
 </project>

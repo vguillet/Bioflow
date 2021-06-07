@@ -26,18 +26,33 @@ class Population(list):
     best_fitness_history = []
     best_individual_history = []
 
-    def get_fitness_evaluation(self, evaluation_function):
+    def get_fitness_evaluation(self,
+                               evaluation_function,
+                               optimisation_mode="max"):
         fitness_evaluation = []
+
         for individual in self:
+            # --> Evaluate individuals
             individual_fitness = evaluation_function(individual)
 
+            # --> Record to individual history
             individual.fitness_history.append(individual_fitness)
+            individual.parameter_set_history.append(individual.parameter_set)
             fitness_evaluation.append(individual_fitness)
 
             # --> Record solution if best overall
-            if len(self.best_fitness_history) == 0 or individual_fitness > self.best_fitness_history[-1]:
-                self.best_fitness_history.append(individual_fitness)
-                self.best_individual_history.append(individual)
+            if optimisation_mode == "max":  # -> Sorting from large to small
+                if len(self.best_fitness_history) == 0 or individual_fitness > self.best_fitness_history[-1]:
+                    self.best_fitness_history.append(individual_fitness)
+                    self.best_individual_history.append(individual)
+
+            elif optimisation_mode == "min":  # -> Sorting from large to small
+                if len(self.best_fitness_history) == 0 or individual_fitness < self.best_fitness_history[-1]:
+                    self.best_fitness_history.append(individual_fitness)
+                    self.best_individual_history.append(individual)
+
+            else:
+                print("!!! Invalid Optimisation mode selected !!!")
 
         return fitness_evaluation
 

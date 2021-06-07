@@ -21,8 +21,9 @@ class RESET_layer(Layer):
                  evaluation_function_bool: bool,
                  step_bool: bool,
                  max_step_bool: bool,
-                 verbose=0):
-        super().__init__()
+                 verbose=0,
+                 name=""):
+        super().__init__(name=name)
 
         self.layer_ref = "      "
         self.layer_type = "RESET_layer"
@@ -36,7 +37,12 @@ class RESET_layer(Layer):
         return
 
     def __str__(self):
-        return f"> {self.layer_type}"
+        if self.layer_name != "":
+            layer_name = f" - {self.layer_name}"
+        else:
+            layer_name = ""
+
+        return f"> {self.layer_type}" + layer_name
 
     def step(self, population=None, evaluation_function=None, epoch=None, max_epoch=None):
         if self.verbose == 1:

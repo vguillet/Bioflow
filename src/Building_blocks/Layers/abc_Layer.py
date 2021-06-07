@@ -23,9 +23,11 @@ __date__ = '10/09/2019'
 
 
 class Layer(ABC):
-    def __init__(self):
+    def __init__(self, name):
 
+        self.layer_ref = "      "
         self.layer_type = None
+        self.layer_name = name
 
         return
 

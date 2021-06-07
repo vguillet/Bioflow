@@ -24,13 +24,16 @@ __date__ = '10/09/2019'
 ################################################################################################################
 
 
-class STEP_layer_1(STEP_layer):
-    def __init__(self):
-        super().__init__()
-        self.layer_type = "STEP_layer: Visualiser"
+class VISU_layer_1(STEP_layer):
+    def __init__(self,
+                 plot_rate=10,
+                 name="Visualiser"):
+        super().__init__(name=name)
+
+        self.plot_rate = plot_rate
 
     def step(self, population, evaluation_function, epoch, max_epoch):
-        if epoch % 10 == 0:
+        if epoch % self.plot_rate == 0:
             x_lst = list(range(-1500, 1500))
             y_lst = []
 
@@ -56,4 +59,5 @@ class STEP_layer_1(STEP_layer):
             plt.scatter(x_pop, y_pop, color="orange")
 
             plt.show()
+
         return population

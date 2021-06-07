@@ -21,15 +21,13 @@ __date__ = '10/09/2019'
 ################################################################################################################
 
 
-class Indvidual_1(Individual):
+class Rastrigin_Indvidual(Individual):
     def __init__(self):
         super().__init__()
 
-        self.nb_of_adjustable_parameters = 4
-        self.parameter_set = {"a": random.randint(-100, 100),
-                              "b": random.randint(-100, 100),
-                              "c": random.randint(-100, 100),
-                              "d": random.randint(-100, 100)}
+        self.nb_of_adjustable_parameters = 2
+        self.parameter_set = {"x": -5.12 + (5.12 - -5.12) * random.random(),
+                              "y": -5.12 + (5.12 - -5.12) * random.random()}
 
         # self.name = Faker().name()
 

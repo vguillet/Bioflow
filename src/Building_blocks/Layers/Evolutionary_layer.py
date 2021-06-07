@@ -36,11 +36,15 @@ class EVO_layer(Layer):
                  mutation_rate: float = 0.2,
                  parameter_blacklist: list = [],
                  parameters_decay_function: int = 0,
-                 verbose=0):
-        super().__init__()
 
-        self.layer_ref = None
+                 optimisation_mode="max",
+                 verbose=0,
+                 name=""):
+        super().__init__(name=name)
+
         self.layer_type = "EVO_layer"
+        self.verbose = verbose
+        self.optimisation_mode = optimisation_mode
 
         self.parameter_randomiser = parameter_randomiser
 
@@ -54,8 +58,6 @@ class EVO_layer(Layer):
         self.parameter_blacklist = parameter_blacklist
         self.parameters_decay_function = parameters_decay_function
 
-        self.verbose = verbose
-
         return
 
     def __str__(self):
@@ -63,7 +65,13 @@ class EVO_layer(Layer):
         settings_option_lists = json.load(open(r"src/Configuration_management/Settings_option_list.json"))
         selection_method = settings_option_lists["parents_selection_methods"][self.selection_method]
 
-        return f"> {self.layer_type} - " \
+        if self.layer_name != "":
+            layer_name = f"{self.layer_name} - "
+        else:
+            layer_name = ""
+
+        return f"> {self.layer_type} - " + layer_name + \
+               f"Optimiser mode: {self.optimisation_mode}, " \
                f"Parents: {self.percent_parents * 100}%, " \
                f"Parents in next gen: {self.percent_parents_in_next_gen * 100}%, " \
                f"Random: {self.percent_random_ind_in_next_gen * 100}%, " \
@@ -73,7 +81,8 @@ class EVO_layer(Layer):
     def step(self, population, evaluation_function, epoch, max_epoch):
 
         # --> Evaluate population
-        fitness_evaluation = population.get_fitness_evaluation(evaluation_function)
+        fitness_evaluation = population.get_fitness_evaluation(evaluation_function=evaluation_function,
+                                                               optimisation_mode=self.optimisation_mode)
 
         parents_count = round(len(population) * self.percent_parents)
         parents_count_in_next_gen = round(len(population) * self.percent_parents_in_next_gen)
@@ -90,15 +99,26 @@ class EVO_layer(Layer):
         # Elitic selection
         if self.selection_method == 0:
             # Use bubblesort to sort population and fitness_evaluation according to fitness_evaluation
-            # -> Sorting from large to small
             for _ in range(len(fitness_evaluation)):
                 for i in range(len(fitness_evaluation) - 1):
-                    if fitness_evaluation[i] < fitness_evaluation[i + 1]:
-                        # Reorder population
-                        population[i], population[i + 1] = population[i + 1], population[i]
+                    if self.optimisation_mode == "max":         # -> Sorting from large to small
+                        if fitness_evaluation[i] < fitness_evaluation[i + 1]:
+                            # Reorder population
+                            population[i], population[i + 1] = population[i + 1], population[i]
 
-                        # Reorder fitness evaluation
-                        fitness_evaluation[i], fitness_evaluation[i + 1] = fitness_evaluation[i + 1], fitness_evaluation[i]
+                            # Reorder fitness evaluation
+                            fitness_evaluation[i], fitness_evaluation[i + 1] = fitness_evaluation[i + 1], fitness_evaluation[i]
+
+                    elif self.optimisation_mode == "min":       # -> Sorting from small to large
+                        if fitness_evaluation[i] > fitness_evaluation[i + 1]:
+                            # Reorder population
+                            population[i], population[i + 1] = population[i + 1], population[i]
+
+                            # Reorder fitness evaluation
+                            fitness_evaluation[i], fitness_evaluation[i + 1] = fitness_evaluation[i + 1], fitness_evaluation[i]
+
+                    else:
+                        print("!!! Invalid Optimisation mode selected !!!")
 
             for i in range(parents_count):
                 parents.append(population[i])
