@@ -7,15 +7,12 @@
 # Built-in/Generic Imports
 import json
 import random
-from copy import deepcopy
 
 # Libs
-from flatten_dict import flatten
-from flatten_dict import unflatten
 
 # Own modules
 from src.Building_blocks.Layers.abc_Layer import Layer
-from src.Tools.Parameter_tools import select_random_parameter_to_modify, get_from_dict, set_in_dict
+from src.Tools.Parameter_tools import select_random_parameter_to_modify
 from src.Building_blocks.Population import Population
 
 
@@ -43,7 +40,7 @@ class PSO_Layer(Layer):
                  name="Layer"):
         # --> Meta
         self.ref = ""
-        self.type = "PSO"
+        self.type = "SA"
         self.name = name
 
         self.verbose = verbose
@@ -62,7 +59,7 @@ class PSO_Layer(Layer):
         return
 
     def __str__(self):
-        return f"       {self.name} ({self.type})        " + \
+        return f"       {self.name} ({self.type})         " + \
                f"Inertia weight: {self.inertia_weight}, " \
                f"Cognitive weight: {self.cognitive_weight}, " \
                f"Social weight: {self.social_weight}"
@@ -72,39 +69,10 @@ class PSO_Layer(Layer):
         population.get_fitness_evaluation(evaluation_function=evaluation_function,
                                           optimisation_mode=self.optimisation_mode)
 
-        # --> Add velocity property to individuals if missing
-        for individual in population:
-            if not hasattr(individual, "velocity"):
-                individual.velocity_history = [0]
 
-        # --> Find pop max fitness index
-        swarm_best_fitness_parameter_set = population.best_individual_history[-1].parameter_set
-
-        # --> Get parameter key map
-        key_map = flatten(deepcopy(population[0].parameter_set))
-
-        for individual in population:
-            for key in key_map:
-                key = list(key)
-
-                # --> Get difference between best swarm fitness and current fitness
-                individual_best_param_diff = get_from_dict(individual.best_parameter_set, key) \
-                                             - get_from_dict(individual.parameter_set, key)
-
-                # --> Get difference between best individual fitness and current fitness
-                swarm_max_param_diff = get_from_dict(swarm_best_fitness_parameter_set, key) \
-                                       - get_from_dict(individual.best_parameter_set, key)
-
-                # --> Solve for velocity
-                particle_velocity = self.inertia_weight * individual.velocity_history[-1] \
-                                    + self.cognitive_weight * random.random() * individual_best_param_diff \
-                                    + self.social_weight * random.random() * swarm_max_param_diff
-
-                # --> Apply movement
-                set_in_dict(individual.parameter_set, list(key), particle_velocity)
 
         if self.verbose == 1:
-            print(f"---- << PSO layer >> ----")
+            print(f"---- << SA layer >> ----")
             print(f" Inertia weight: {self.inertia_weight}")
             print(f" Cognitive weight: {self.cognitive_weight}")
             print(f" Social weight: {self.social_weight}")

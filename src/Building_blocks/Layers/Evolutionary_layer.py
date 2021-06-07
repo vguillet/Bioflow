@@ -13,7 +13,7 @@ from copy import deepcopy
 # Own modules
 from src.Building_blocks.Layers.abc_Layer import Layer
 from src.Building_blocks.Population import Population
-from src.Tools.Parameter_tools import select_parameter_to_modify
+from src.Tools.Parameter_tools import select_random_parameter_to_modify
 
 
 __version__ = '1.1.1'
@@ -148,8 +148,8 @@ class EVO_layer(Layer):
             # Mutate offspring
             for _ in range(nb_of_parameters_to_mutate):
                 # Select parameter class to modify
-                parameter_to_modify = select_parameter_to_modify(parameter_set=offspring.parameter_set,
-                                                                 parameter_blacklist=self.parameter_blacklist)
+                parameter_to_modify = select_random_parameter_to_modify(parameter_set=offspring.parameter_set,
+                                                                        parameter_blacklist=self.parameter_blacklist)
 
                 # Modify parameter
                 offspring = self.parameter_randomiser().modify_param(offspring=offspring,

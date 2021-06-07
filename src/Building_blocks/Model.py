@@ -28,7 +28,7 @@ class Model(Layer):
                  layers: list = [],
                  epochs: int = 10,
                  verbose=0,
-                 name=""):
+                 name="Model"):
         # --> Meta
         self.ref = ""
         self.type = "MODEL"
@@ -182,7 +182,7 @@ class Model(Layer):
                                                                    optimisation_mode=self.optimisation_mode)
 
             print("")
-            print("Best solution fitness:", round(population.best_fitness_history[-1]), 2)
+            print("Best solution fitness:", population.best_fitness_history[-1])
 
             print("Population avg fitness:", round(sum(fitness_evaluation)/len(fitness_evaluation), 2))
             print(f"Population avg age: "

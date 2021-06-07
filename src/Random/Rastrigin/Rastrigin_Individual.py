@@ -27,7 +27,9 @@ class Rastrigin_Indvidual(Individual):
 
         self.nb_of_adjustable_parameters = 2
         self.parameter_set = {"x": -5.12 + (5.12 - -5.12) * random.random(),
-                              "y": -5.12 + (5.12 - -5.12) * random.random()}
+                              "y": -5.12 + (5.12 - -5.12) * random.random(),
+                              "test": {"v": 1,
+                                       "w": 0}}
 
         # self.name = Faker().name()
 

@@ -25,6 +25,9 @@ class Rastrigin_randomiser:
                      nb_of_generations,
                      parameters_decay_function):
 
-        offspring.parameter_set[parameter_to_modify] += random.randint(-1, 1)
+        if parameter_to_modify == "x" or parameter_to_modify == "y":
+            offspring.parameter_set[parameter_to_modify] += random.randint(-1, 1)
+        else:
+            pass
 
         return offspring

@@ -59,7 +59,7 @@ my_model.add_layer(EVO_layer(individual_template=individual_template,
                              percent_random_ind_in_next_gen=0.3,
                              verbose=0))
 
-# my_model.add_layer(Rastrigin_VISU_layer(plot_rate=1))
+my_model.add_layer(Rastrigin_VISU_layer(plot_rate=1))
 
 my_model.add_layer(PSO_Layer(parameter_randomiser=randomiser,
                              inertia_weight=0.729,
@@ -67,7 +67,7 @@ my_model.add_layer(PSO_Layer(parameter_randomiser=randomiser,
                              social_weight=1.49445,
                              verbose=0))
 
-# my_model.add_layer(Rastrigin_VISU_layer(plot_rate=1))
+my_model.add_layer(Rastrigin_VISU_layer(plot_rate=1))
 
 # my_model.add_layer(sub_model)
 
@@ -77,17 +77,8 @@ my_model.add_layer(PSO_Layer(parameter_randomiser=randomiser,
                              social_weight=1.49445,
                              verbose=0))
 
-# my_model.add_layer(Rastrigin_VISU_layer(plot_rate=1))
+my_model.add_layer(Rastrigin_VISU_layer(plot_rate=1))
 
-# my_model.add_layer(MODULATOR_layer(new_evaluation_function=None,
-#                                    new_step=10,
-#                                    new_max_step=100,
-#                                    verbose=0))
-#
-# my_model.add_layer(RESET_layer(evaluation_function_bool=False,
-#                                step_bool=True,
-#                                max_step_bool=True,
-#                                verbose=0))
 
 # --> Create solution population
 my_solutions = []
