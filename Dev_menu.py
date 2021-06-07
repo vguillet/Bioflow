@@ -79,6 +79,27 @@ my_model.add_layer(PSO_Layer(parameter_randomiser=randomiser,
 
 my_model.add_layer(Rastrigin_VISU_layer(plot_rate=1))
 
+my_model.add_layer(PSO_Layer(parameter_randomiser=randomiser,
+                             inertia_weight=0.729,
+                             cognitive_weight=1.49445,
+                             social_weight=1.49445,
+                             verbose=0))
+
+my_model.add_layer(Rastrigin_VISU_layer(plot_rate=1))
+
+my_model.add_layer(PSO_Layer(parameter_randomiser=randomiser,
+                             inertia_weight=0.729,
+                             cognitive_weight=1.49445,
+                             social_weight=1.49445,
+                             verbose=0))
+
+my_model.add_layer(Rastrigin_VISU_layer(plot_rate=1))
+
+my_model.add_layer(PSO_Layer(parameter_randomiser=randomiser,
+                             inertia_weight=0.729,
+                             cognitive_weight=1.49445,
+                             social_weight=1.49445,
+                             verbose=0))
 
 # --> Create solution population
 my_solutions = []
