@@ -39,7 +39,7 @@ class EVO_layer(Layer):
 
                  optimisation_mode="max",
                  verbose=0,
-                 name=""):
+                 name="Layer"):
         # --> Meta
         self.ref = ""
         self.type = "EVO"
@@ -68,12 +68,7 @@ class EVO_layer(Layer):
         settings_option_lists = json.load(open(r"src/Configuration_management/Settings_option_list.json"))
         selection_method = settings_option_lists["parents_selection_methods"][self.selection_method]
 
-        if self.name != "":
-            layer_name = f"{self.name} - "
-        else:
-            layer_name = ""
-
-        return f"> {self.type} - " + layer_name + \
+        return f"       {self.name} ({self.type})        " + \
                f"Optimiser mode: {self.optimisation_mode}, " \
                f"Parents: {self.percent_parents * 100}%, " \
                f"Parents in next gen: {self.percent_parents_in_next_gen * 100}%, " \

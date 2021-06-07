@@ -43,7 +43,7 @@ class RESET_layer(Layer):
         else:
             layer_name = ""
 
-        return f"> {self.type}" + layer_name
+        return f"> {self.name} ({self.type})"
 
     def step(self, population=None, evaluation_function=None, epoch=None, max_epoch=None):
         if self.verbose == 1:

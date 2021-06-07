@@ -43,7 +43,7 @@ class MODULATOR_layer(Layer):
         else:
             layer_name = ""
 
-        return f"> {self.type}" + layer_name
+        return f"> {self.name} ({self.type})"
 
     def step(self, population, evaluation_function, epoch, max_epoch):
 

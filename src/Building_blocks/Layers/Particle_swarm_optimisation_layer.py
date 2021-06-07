@@ -37,7 +37,7 @@ class PSO_Layer(Layer):
 
                  optimisation_mode="max",
                  verbose=0,
-                 name=""):
+                 name="Layer"):
         # --> Meta
         self.ref = ""
         self.type = "PSO"
@@ -59,12 +59,7 @@ class PSO_Layer(Layer):
         return
 
     def __str__(self):
-        if self.name != "":
-            layer_name = f"{self.name} - "
-        else:
-            layer_name = ""
-
-        return f"> {self.type} - " + layer_name + \
+        return f"       {self.name} ({self.type})        " + \
                f"Inertia weight: {self.inertia_weight}, " \
                f"Cognitive weight: {self.cognitive_weight}, " \
                f"Social weight: {self.social_weight}"
