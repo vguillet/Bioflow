@@ -26,12 +26,24 @@ class Population(list):
                                evaluation_function,
                                data,
                                optimisation_mode="max"):
+        """
+        Used to determine the fitness of all the individuals in a population.
+
+        Note: When used, get_fitness_evaluation also stores the fitness of each individual in the
+        respective individual's history
+
+        :param evaluation_function:
+        :param data:
+        :param optimisation_mode:
+        :return:
+        """
         fitness_evaluation = []
 
         for individual in self:
             # --> Evaluate individuals
-            individual_fitness = evaluation_function(individual=individual,
-                                                     data=data)
+            individual_fitness = individual.get_fitness_evaluation(evaluation_function=evaluation_function,
+                                                                   data=data,
+                                                                   record_evaluation=True)
 
             # --> Record to individual history
             individual.fitness_history.append(individual_fitness)

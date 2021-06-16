@@ -111,7 +111,7 @@ class Model(Layer):
             layer.ref = self.layer_count
 
             # --> Set optimisation mode
-            layer.optimisation_mode = self.optimisation_mode
+            layer.param['optimisation_mode'] = self.optimisation_mode
 
             self.layers.append(layer)
 

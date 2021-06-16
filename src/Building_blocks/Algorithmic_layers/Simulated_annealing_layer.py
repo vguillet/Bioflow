@@ -5,11 +5,15 @@
 """
 
 # Built-in/Generic Imports
+import random
+from copy import deepcopy
 
 # Libs
+from flatten_dict import flatten
 
 # Own modules
 from src.Building_blocks.abc_Layer import Layer
+from src.Building_blocks.Parameter_tools import get_from_dict, add_in_dict
 
 __version__ = '1.1.1'
 __author__ = 'Victor Guillet'
@@ -19,16 +23,15 @@ __date__ = '10/09/2019'
 ################################################################################################################
 
 
-class PSO_Layer(Layer):
+class SA_Layer(Layer):
     def __init__(self,
                  parameter_randomiser,
 
-                 inertia_weight: float = 0.729,
-                 cognitive_weight: float = 1.49445,       # Particle best influence
-                 social_weight: float = 1.49445,          # Swarm overall best influence
+                 initial_temperature: float = 90,
+                 final_temperature: float = 0.1,
+                 alpha: float = 1,
 
                  parameter_blacklist: list = [],
-                 parameters_decay_function: int = 0,
 
                  optimisation_mode="max",
                  verbose=0,
@@ -40,31 +43,74 @@ class PSO_Layer(Layer):
         self.name = name
 
         self.verbose = verbose
-        self.optimisation_mode = optimisation_mode
 
         # --> Settings
-        self.parameter_randomiser = parameter_randomiser
+        self.param = {"optimisation_mode": optimisation_mode,
+                      "parameter_randomiser": parameter_randomiser,
 
-        self.inertia_weight = inertia_weight
-        self.cognitive_weight = cognitive_weight
-        self.social_weight = social_weight
+                      "initial_temperature": initial_temperature,
+                      "final_temperature": final_temperature,
+                      "alpha": alpha,
 
-        self.parameter_blacklist = parameter_blacklist
-        self.parameters_decay_function = parameters_decay_function
+                      "parameter_blacklist": parameter_blacklist
+                      }
+
+        # self.parameter_randomiser = parameter_randomiser
+        #
+        # self.initial_temperature = initial_temperature
+        # self.final_temperature = final_temperature
+        # self.alpha = alpha
+        #
+        # self.parameter_blacklist = parameter_blacklist
 
         return
 
     def __str__(self):
         return f"       {self.name} ({self.type})         " + \
-               f"Inertia weight: {self.inertia_weight}, " \
-               f"Cognitive weight: {self.cognitive_weight}, " \
-               f"Social weight: {self.social_weight}"
+               f"Initial temperature: {self.param['initial_temperature']}, " \
+               f"Final temperature: {self.param['final_temperature']}, " \
+               f"Alpha temperature: {self.param['alpha']}"
 
     def step(self, population, evaluation_function, epoch, max_epoch, data=None, settings=None):
         # --> Evaluate population (record fitness of population)
         population.get_fitness_evaluation(evaluation_function=evaluation_function,
                                           data=data,
-                                          optimisation_mode=self.optimisation_mode)
+                                          optimisation_mode=self.param['optimisation_mode'])
+
+        # --> Get parameter key map
+        key_map = flatten(deepcopy(population[0].parameter_set))
+
+        for individual in population:
+
+            # --> Create hypothetical individual
+            temp_individual = deepcopy(individual)
+
+            # --> Randomly adjust all non-blacklisted parameters
+            for key in key_map:
+                key = list(key)
+
+                if any(item in key for item in self.parameter_blacklist) is False:
+
+                    # --> Apply change
+                    temp_individual = self.param['parameter_randomiser']().modify_param(offspring=temp_individual,
+                                                                                        parameter_to_modify=parameter_to_modify,
+                                                                                        current_generation=epoch,
+                                                                                        nb_of_generations=max_epoch,
+                                                                                        parameters_decay_function=self.param['parameters_decay_function'])
+
+                    add_in_dict(temp_individual.parameter_set, list(key), random.random())
+
+            # --> Evaluate new solution
+            temp_individual_fitness = temp_individual.get_fitness_evaluation(evaluation_function=evaluation_function,
+                                                                             data=data,
+                                                                             optimisation_mode=self.optimisation_mode)
+            # TODO: Finish layer logic
+            # --> Accept new solution if better
+            if temp_individual_fitness > individual.fitness_history[-1]:
+                individual.parameter_set = temp_individual.parameter_set
+            # --> Else, accept base don relative probability
+            else:
+                pass
 
         if self.verbose == 1:
             print(f"---- << SA layer >> ----")

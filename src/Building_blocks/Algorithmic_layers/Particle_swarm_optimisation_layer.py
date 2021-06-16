@@ -25,14 +25,11 @@ __date__ = '10/09/2019'
 
 class PSO_Layer(Layer):
     def __init__(self,
-                 parameter_randomiser,
-
                  inertia_weight: float = 0.729,
                  cognitive_weight: float = 1.49445,       # Particle best influence
                  social_weight: float = 1.49445,          # Swarm overall best influence
 
                  parameter_blacklist: list = [],
-                 parameters_decay_function: int = 0,
 
                  optimisation_mode="max",
                  verbose=0,
@@ -44,31 +41,30 @@ class PSO_Layer(Layer):
         self.name = name
 
         self.verbose = verbose
-        self.optimisation_mode = optimisation_mode
 
         # --> Settings
-        self.parameter_randomiser = parameter_randomiser
+        self.param = {"optimisation_mode": optimisation_mode,
 
-        self.inertia_weight = inertia_weight
-        self.cognitive_weight = cognitive_weight
-        self.social_weight = social_weight
+                      "inertia_weight": inertia_weight,
+                      "cognitive_weight": cognitive_weight,
+                      "social_weight": social_weight,
 
-        self.parameter_blacklist = parameter_blacklist
-        self.parameters_decay_function = parameters_decay_function
+                      "parameter_blacklist": parameter_blacklist
+                      }
 
         return
 
     def __str__(self):
         return f"       {self.name} ({self.type})        " + \
-               f"Inertia weight: {self.inertia_weight}, " \
-               f"Cognitive weight: {self.cognitive_weight}, " \
-               f"Social weight: {self.social_weight}"
+               f"Inertia weight: {self.param['inertia_weight']}, " \
+               f"Cognitive weight: {self.param['cognitive_weight']}, " \
+               f"Social weight: {self.param['social_weight']}"
 
     def step(self, population, evaluation_function, epoch, max_epoch, data=None, settings=None):
-        # --> Evaluate population (record fitness of population)
+        # --> Evaluate population (log fitness of population + best fitness)
         population.get_fitness_evaluation(evaluation_function=evaluation_function,
                                           data=data,
-                                          optimisation_mode=self.optimisation_mode)
+                                          optimisation_mode=self.param['optimisation_mode'])
 
         # --> Add velocity property to individuals if missing
         for individual in population:
@@ -82,10 +78,12 @@ class PSO_Layer(Layer):
         key_map = flatten(deepcopy(population[0].parameter_set))
 
         for individual in population:
+
+            # --> Adjust all non-blacklisted parameters
             for key in key_map:
                 key = list(key)
 
-                if any(item in key for item in self.parameter_blacklist) is False:
+                if any(item in key for item in self.param['parameter_blacklist']) is False:
                     # --> Get difference between best swarm fitness and current fitness
                     individual_best_param_diff = get_from_dict(individual.best_parameter_set, key) \
                                                  - get_from_dict(individual.parameter_set, key)
@@ -95,9 +93,9 @@ class PSO_Layer(Layer):
                                            - get_from_dict(individual.best_parameter_set, key)
 
                     # --> Solve for velocity
-                    particle_velocity = self.inertia_weight * individual.velocity_history[-1] \
-                                        + self.cognitive_weight * random.random() * individual_best_param_diff \
-                                        + self.social_weight * random.random() * swarm_max_param_diff
+                    particle_velocity = self.param['inertia_weight'] * individual.velocity_history[-1] \
+                                        + self.param['cognitive_weight'] * random.random() * individual_best_param_diff \
+                                        + self.param['social_weight'] * random.random() * swarm_max_param_diff
 
                     # --> Apply movement
                     add_in_dict(individual.parameter_set, list(key), particle_velocity)
@@ -107,9 +105,9 @@ class PSO_Layer(Layer):
 
         if self.verbose == 1:
             print(f"---- << PSO layer >> ----")
-            print(f" Inertia weight: {self.inertia_weight}")
-            print(f" Cognitive weight: {self.cognitive_weight}")
-            print(f" Social weight: {self.social_weight}")
+            print(f" Inertia weight: {self.param['inertia_weight']}")
+            print(f" Cognitive weight: {self.param['cognitive_weight']}")
+            print(f" Social weight: {self.param['social_weight']}")
             print("\n")
 
         return population

@@ -8,8 +8,10 @@
 import random
 from functools import reduce  # forward compatibility for Python 3
 import operator
+from copy import deepcopy
 
 # Libs
+from flatten_dict import flatten
 
 # Own modules
 
@@ -21,15 +23,20 @@ __date__ = '31/01/2021'
 
 
 def select_random_parameter_to_modify(parameter_set, parameter_blacklist):
-    # --> Select parameter class to modify
-    parameter_to_modify = random.choice(list(parameter_set.keys()))
+    # --> Get parameter key map
+    key_map = list(flatten(deepcopy(parameter_set)).keys())
 
-    while parameter_to_modify in parameter_blacklist:
-        parameter_to_modify = random.choice(list(parameter_set.keys()))
+    # --> Select parameter class to modify
+    parameter_to_modify = random.choice(key_map)
+
+    while any(item in parameter_to_modify for item in parameter_blacklist) is True:
+        parameter_to_modify = random.choice(key_map)
 
     # --> Select parameter type to modify
-    if isinstance(parameter_set[parameter_to_modify], dict):
-        return select_random_parameter_to_modify(parameter_set[parameter_to_modify], parameter_blacklist)
+    if isinstance(get_from_dict(dataDict=parameter_set, mapList=parameter_to_modify), dict):
+        return select_random_parameter_to_modify(parameter_set=get_from_dict(dataDict=parameter_set,
+                                                                             mapList=parameter_to_modify),
+                                                 parameter_blacklist=parameter_blacklist)
 
     else:
         return parameter_to_modify

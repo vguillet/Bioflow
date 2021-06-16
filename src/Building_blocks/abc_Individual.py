@@ -43,3 +43,19 @@ class Individual(ABC):
     @abstractmethod
     def gen_parameter_set(self):
         return
+
+    def get_fitness_evaluation(self,
+                               evaluation_function,
+                               data,
+                               record_evaluation=False,
+                               optimisation_mode="max"):
+        # --> Evaluate individual
+        individual_fitness = evaluation_function(individual=self,
+                                                 data=data)
+
+        # --> Record to individual history
+        if record_evaluation:
+            self.fitness_history.append(individual_fitness)
+            self.parameter_set_history.append(self.parameter_set)
+
+        return individual_fitness
