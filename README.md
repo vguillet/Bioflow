@@ -1,6 +1,6 @@
 # Bioflow
 
-A modular framework inspired from deep leanring frameworks and models, allowing for creating optimisation models containing various sequences of optimisations steps.
+A modular framework inspired from deep learning frameworks and models, allowing for creating optimisation models containing various sequences of optimisations steps.
 The following algorithm layers are implemented:
 
 - Evolutionary layer
@@ -19,7 +19,6 @@ The following are currently being investigated or in the process of being implem
 - Differential Evolution
 
 The framework also contain a number of layers used to control various metaparameters during the optimisation process.
-
 
 For a given problem, the following need to be created:
 - Individual: class with parameter set attribute + parameter set generator function modifying  parameter set attribute(for evo layers)
