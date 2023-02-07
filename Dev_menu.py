@@ -52,17 +52,19 @@ my_model = Model(evaluation_function=function,
 
 my_model.add_layer(EVO_layer(individual_template=individual_template,
                              parameter_randomiser=randomiser,
-                             percent_parents=0.3,
+                             percent_parents=[0.3, 0.1],
                              percent_parents_in_next_gen=0.2,
                              percent_random_ind_in_next_gen=0.3,
-                             verbose=0))
+                             verbose=0,
+                             name="EVO_layer_1"))
 
 # my_model.add_layer(Rastrigin_VISU_layer(plot_rate=1))
 
 my_model.add_layer(PSO_Layer(inertia_weight=0.729,
                              cognitive_weight=1.49445,
                              social_weight=1.49445,
-                             verbose=0))
+                             verbose=0,
+                             name="PSO_layer_1"))
 
 # my_model.add_layer(Rastrigin_VISU_layer(plot_rate=1))
 
@@ -71,28 +73,32 @@ my_model.add_layer(sub_model)
 my_model.add_layer(PSO_Layer(inertia_weight=0.729,
                              cognitive_weight=1.49445,
                              social_weight=1.49445,
-                             verbose=0))
+                             verbose=0,
+                             name="PSO_layer_2"))
 
 # my_model.add_layer(Rastrigin_VISU_layer(plot_rate=1))
 
 my_model.add_layer(PSO_Layer(inertia_weight=0.729,
                              cognitive_weight=1.49445,
                              social_weight=1.49445,
-                             verbose=0))
+                             verbose=0,
+                             name="PSO_layer_3"))
 
 # my_model.add_layer(Rastrigin_VISU_layer(plot_rate=1))
 
 my_model.add_layer(PSO_Layer(inertia_weight=0.729,
                              cognitive_weight=1.49445,
                              social_weight=1.49445,
-                             verbose=0))
+                             verbose=0,
+                             name="PSO_layer_4"))
 
 # my_model.add_layer(Rastrigin_VISU_layer(plot_rate=1))
 
 my_model.add_layer(PSO_Layer(inertia_weight=0.729,
                              cognitive_weight=1.49445,
                              social_weight=1.49445,
-                             verbose=0))
+                             verbose=0,
+                             name="PSO_layer_5"))
 
 # my_model.add_layer(Rastrigin_VISU_layer(plot_rate=1))
 

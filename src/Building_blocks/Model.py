@@ -58,12 +58,15 @@ class Model(Layer):
     def __str__(self):
         for layer in self.layers:
             if layer.type == "MODEL":
-                print(f"\n>>>>>>>> SUB-MODEL - {layer.param['epochs']} epochs")
+                print(f" >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> SUB-MODEL - {layer.param['epochs']} epochs")
                 print(layer, end="")
-                print("\n>>>>>>>>")
+                print(f" >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ")
+                print("_________________________________________________________________________________")
 
             else:
                 print(f"{layer.ref} {layer}")
+                if layer != self.layers[-1]:
+                    print("_________________________________________________________________________________")
 
         return ""
 
@@ -128,13 +131,12 @@ class Model(Layer):
 
         # --> Print model structure
         print("=================================================================================")
-        print("                                 MODEL Structure                                 ")
-        print("=================================================================================\n")
-
+        print("|                                MODEL Structure                                |")
+        print("=================================================================================")
         print(self.__str__())
-        print("=======================================")
 
-        print("\n-> Epoch training steps count:")
+        print("=================================================================================\n")
+        print("-> Epoch training steps count:")
         for layer_type in layer_types_dict.keys():
             if layer_type not in self.param["non_training_layers"]:
                 print(f" - {layer_type} steps: {layer_types_dict[layer_type]}")
@@ -172,8 +174,6 @@ class Model(Layer):
 
     def train(self, population, data=None, settings=None):
         if self.verbose == 1:
-            print("\n")
-            print("--------------------------------------------------------------------------------------")
             self.summary()
 
         # -> Define training variables (adjustable using modulator layers)

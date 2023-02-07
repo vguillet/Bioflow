@@ -18,13 +18,17 @@ __date__ = '10/09/2019'
 
 ################################################################################################################
 
+ELITIC = 0
+
+SELECTION_METHODS = ["ELITIC"]
+
 
 class EVO_layer(Layer):
     def __init__(self,
                  # EVO settings
                  parameter_randomiser,
                  individual_template,
-                 selection_method: int = 0,
+                 selection_method: int = ELITIC,
                  parameters_decay_function: int = 0,
 
                  # Weights
@@ -123,9 +127,8 @@ class EVO_layer(Layer):
         """
 
         # -> Construct layer info
-        layer_info = f"-------------- {self.name} ({self.type})        " + \
-                     f"\n     - Optimiser mode: {self.param['optimisation_mode'] if not None else '-'} " + \
-                     f"\n     - Selection method: {self.param['selection_method']} \n"
+        layer_info = f"> {self.name} - Evolutionary" + \
+                     f"\n     - Selection method: {SELECTION_METHODS[self.param['selection_method']]} \n"
         layer_info += self.weights_summary()
 
         return layer_info
@@ -175,7 +178,7 @@ class EVO_layer(Layer):
         # TODO: Implement alternative selection methods
 
         # Elitic selection
-        if self.param['selection_method'] == 0:
+        if self.param['selection_method'] == ELITIC:
             # Use bubblesort to sort population and fitness_evaluation according to fitness_evaluation
             for _ in range(len(fitness_evaluation)):
                 for i in range(len(fitness_evaluation) - 1):

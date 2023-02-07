@@ -95,7 +95,7 @@ class PSO_Layer(Layer):
         """
 
         # -> Construct layer info
-        layer_info = f"-------------- {self.name} ({self.type})        "
+        layer_info = f"> {self.name} - Particle Swarm Optimisation"
         layer_info += self.weights_summary()
 
         return layer_info

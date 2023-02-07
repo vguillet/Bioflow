@@ -55,7 +55,10 @@ class Layer(ABC):
 
         # -> Get weights definition
         for weight_type in self.param["weight_curves"].keys():
-            if len(self.param["weight_curves"][weight_type]["reference_curve"]) != 2:
+            if len(self.param["weight_curves"][weight_type]["reference_curve"]) > 2 \
+                    or self.param["weight_curves"][weight_type]["reference_curve"][0] != \
+                    self.param["weight_curves"][weight_type]["reference_curve"][-1]:
+
                 weights[weight_type] = \
                     f"Curve (min: {min(self.param['weight_curves'][weight_type]['reference_curve'])}, " \
                     f"max: {max(self.param['weight_curves'][weight_type]['reference_curve'])})"
