@@ -58,9 +58,9 @@ class Model(Layer):
     def __str__(self):
         for layer in self.layers:
             if layer.type == "MODEL":
-                print(f"  >>>>>>>> SUB-MODEL - {layer.epochs} epochs")
+                print(f"\n>>>>>>>> SUB-MODEL - {layer.param['epochs']} epochs")
                 print(layer, end="")
-                print("  >>>>>>>>")
+                print("\n>>>>>>>>")
 
             else:
                 print(f"{layer.ref} {layer}")
@@ -98,8 +98,7 @@ class Model(Layer):
 
         return training_layers_count
 
-    @staticmethod
-    def count_layer_types(layer_list: list, layer_types_dict=None):
+    def count_layer_types(self, layer_list: list, layer_types_dict=None):
         """
         Counts the number of layers of each type in the model
 

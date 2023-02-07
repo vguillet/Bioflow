@@ -66,7 +66,7 @@ my_model.add_layer(PSO_Layer(inertia_weight=0.729,
 
 # my_model.add_layer(Rastrigin_VISU_layer(plot_rate=1))
 
-# my_model.add_layer(sub_model)
+my_model.add_layer(sub_model)
 
 my_model.add_layer(PSO_Layer(inertia_weight=0.729,
                              cognitive_weight=1.49445,
