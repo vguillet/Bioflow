@@ -73,7 +73,7 @@ class MODULATOR_layer(Modulator_layer):
     def __str__(self):
         return f"  -> {self.name} ({self.type})"
 
-    def step(self, evaluation_function, data=None, settings=None):
+    def step(self, evaluation_function, epoch: int, data=None, settings=None):
 
         if self.new_evaluation_function is not None:
             evaluation_function = self.new_evaluation_function

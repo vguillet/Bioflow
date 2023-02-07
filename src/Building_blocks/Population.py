@@ -28,6 +28,7 @@ class Population(list):
     def get_fitness_evaluation(self,
                                evaluation_function,
                                data,
+                               settings,
                                optimisation_mode="max"):
         """
         Used to determine the fitness of all the individuals in a population.
@@ -35,18 +36,23 @@ class Population(list):
         Note: When used, get_fitness_evaluation also stores the fitness of each individual in the
         respective individual's history
 
-        :param evaluation_function:
-        :param data:
-        :param optimisation_mode:
-        :return:
+       :param evaluation_function: Function to evaluate individuals
+        :param data: Data to evaluate individuals on
+        :param settings: Settings to pass to the layer
+        :param optimisation_mode: min or max
+
+        :return: List of fitness values
         """
         fitness_evaluation = []
 
         for individual in self:
             # --> Evaluate individuals
-            individual_fitness = individual.get_fitness_evaluation(evaluation_function=evaluation_function,
-                                                                   data=data,
-                                                                   record_evaluation=True)
+            individual_fitness = individual.get_fitness_evaluation(
+                evaluation_function=evaluation_function,
+                data=data,
+                settings=settings,
+                record_evaluation=True
+            )
 
             # --> Record individual fitness
             fitness_evaluation.append(individual_fitness)

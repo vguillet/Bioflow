@@ -80,7 +80,10 @@ def flatten_dict(dataDict: dict, parent_key=None):
                 items.update(flatten_dict(dataDict=value, parent_key=(key)).items())
         else:
             if parent_key is not None:
-                items[(*parent_key, key)] = value
+                if isinstance(parent_key, tuple):
+                    items[(*parent_key, key)] = value
+                else:
+                    items[(parent_key, key)] = value
             else:
                 items[(key)] = value
 
@@ -134,9 +137,9 @@ if __name__ == "__main__":
 
     dataDict = {
         "a": 1,
-        "b": {
-            "c": 2,
-            "d": {
+        "bfsadf": {
+            "cncvb": 2,
+            "djkhl": {
                 "e": 3,
                 "f": 4
             }

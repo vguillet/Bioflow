@@ -154,10 +154,22 @@ class Model(Layer):
     def add_layer(self, layer):
         self.layers.append(layer)
 
-    def step(self, population, evaluation_function, epoch, data=None, settings=None):
+    def step(self, population, evaluation_function, optimisation_mode: str, epoch, data=None, settings=None):
+        """
+        Perform a round of the model training
+
+        :param population: Population object
+        :param evaluation_function: Function to evaluate individuals
+        :param optimisation_mode: min or max
+        :param epoch: Current epoch
+        :param data: Data to evaluate individuals on
+        :param settings: Settings to use for evaluation
+
+        :return: Population object
+        """
         self.evaluation_function = evaluation_function
 
-        return self.train(population, data=data, settings=None)
+        return self.train(population, data=data, settings=settings)
 
     def train(self, population, data=None, settings=None):
         if self.verbose == 1:
@@ -167,6 +179,7 @@ class Model(Layer):
 
         # -> Define training variables (adjustable using modulator layers)
         evaluation_function = self.param["evaluation_function"]
+        optimisation_mode = self.param["optimisation_mode"]
         data = data
         settings = settings
 
@@ -183,8 +196,7 @@ class Model(Layer):
             for layer in self.layers:
                 # -> Process modulator layer
                 if layer.type == "MODULATOR":
-                    evaluation_function = layer.step(population=population,
-                                                     evaluation_function=evaluation_function,
+                    evaluation_function = layer.step(evaluation_function=evaluation_function,
                                                      epoch=epoch,
                                                      data=data,
                                                      settings=settings)
@@ -193,9 +205,10 @@ class Model(Layer):
                 else:
                     population = layer.step(population=population,
                                             evaluation_function=evaluation_function,
+                                            optimisation_mode=optimisation_mode,
                                             epoch=epoch,
                                             data=data,
-                                            settings=None)
+                                            settings=settings)
 
         # ----- Summaries training results
         if self.verbose == 1:
@@ -206,7 +219,8 @@ class Model(Layer):
             # --> Evaluate population
             fitness_evaluation = population.get_fitness_evaluation(evaluation_function=evaluation_function,
                                                                    data=data,
-                                                                   optimisation_mode=self.optimisation_mode)
+                                                                   settings=settings,
+                                                                   optimisation_mode=optimisation_mode)
 
             print("")
             print("Best solution fitness:", population.best_fitness_history[-1])

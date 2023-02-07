@@ -64,12 +64,27 @@ class Individual(ABC):
     def get_fitness_evaluation(self,
                                evaluation_function,
                                data,
+                               settings,
                                record_evaluation=False):
-        # --> Evaluate individual
-        individual_fitness = evaluation_function(individual=self,
-                                                 data=data)
+        """
+        Evaluate the individual's fitness.
 
-        # --> Record to individual history
+        :param evaluation_function: Function to evaluate individuals
+        :param data: Data to evaluate individuals on
+        :param settings: Settings to pass to the layer
+        :param record_evaluation: Whether to record the evaluation in the individual's history
+
+        :return: Fitness value
+        """
+
+        # -> Evaluate individual
+        individual_fitness = evaluation_function(
+            individual=self,
+            data=data,
+            settings=settings
+        )
+
+        # -> Record to individual history
         if record_evaluation:
             self.fitness_history.append(individual_fitness)
             self.parameter_set_history.append(self.parameter_set)

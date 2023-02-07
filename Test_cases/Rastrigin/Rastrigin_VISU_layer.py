@@ -32,7 +32,7 @@ class Rastrigin_VISU_layer(STEP_layer):
 
         self.plot_rate = plot_rate
 
-    def step(self, population, evaluation_function, epoch, data=None, settings=None):
+    def step(self, population, evaluation_function, optimisation_mode: int, epoch, data=None, settings=None):
         if epoch % self.plot_rate == 0:
             x = np.linspace(-5.12, 5.12, 100)
             y = np.linspace(-5.12, 5.12, 100)

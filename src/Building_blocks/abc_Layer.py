@@ -112,5 +112,5 @@ class Layer(ABC):
         return weights
 
     @abstractmethod
-    def step(self, population, evaluation_function, epoch, data=None, settings=None):
+    def step(self, population, evaluation_function, optimisation_mode: str, epoch: int, data=None, settings=None):
         return population

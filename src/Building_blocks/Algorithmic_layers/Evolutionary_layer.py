@@ -39,7 +39,7 @@ class EVO_layer(Layer):
                  parameter_blacklist: list = [],
 
                  # Misc settings
-                 optimisation_mode="max",
+                 optimisation_mode: str = None,
                  evaluation_function=None,
                  verbose=0,
                  name="Layer"):
@@ -60,7 +60,7 @@ class EVO_layer(Layer):
         :param parameters_throttle_curves: A dict of throttle curves for each parameter,
                                            each curve is a list of at least 2 values
         :param parameter_blacklist:
-        :param optimisation_mode:
+        :param optimisation_mode: min or max
         :param evaluation_function:
         :param verbose:
         :param name:
@@ -124,35 +124,41 @@ class EVO_layer(Layer):
 
         # -> Construct layer info
         layer_info = f"-------------- {self.name} ({self.type})        " + \
-                     f"\n     - Optimiser mode: {self.param['optimisation_mode']} " + \
+                     f"\n     - Optimiser mode: {self.param['optimisation_mode'] if not None else '-'} " + \
                      f"\n     - Selection method: {self.param['selection_method']} \n"
         layer_info += self.weights_summary()
 
         return layer_info
 
-    def step(self, population, evaluation_function, epoch: int, data=None, settings=None):
+    def step(self, population, evaluation_function, optimisation_mode: str, epoch: int, data=None, settings=None):
         """
         Perform a single step of the EVO layer.
 
-        :param population:
-        :param evaluation_function:
-        :param epoch:
-        :param data:
-        :param settings:
-        :return:
+        :param population: Population object
+        :param evaluation_function: Function to evaluate individuals
+        :param optimisation_mode: min or max
+        :param epoch: Current epoch
+        :param data: Data to evaluate individuals on
+        :param settings: Settings to pass to the layer
+
+        :return: Population object
         """
 
         # -> Get epoch weights
         epoch_weights = self.get_epoch_weights(epoch=epoch)
 
         # ============================================================== Evaluate population
-        # !!! Evaluation function set in layer is always prioritised over evaluation function provided by model !!!
+        # !!! Properties set in layer are always prioritised over properties provided by model !!!
         if self.param["evaluation_function"] is not None:
             evaluation_function = self.param["evaluation_function"]
 
+        if self.param["optimisation_mode"] is not None:
+            optimisation_mode = self.param["optimisation_mode"]
+
         fitness_evaluation = population.get_fitness_evaluation(evaluation_function=evaluation_function,
                                                                data=data,
-                                                               optimisation_mode=self.param['optimisation_mode'])
+                                                               settings=settings,
+                                                               optimisation_mode=optimisation_mode)
 
         # ============================================================== Prepare next generation
         parents_count = round(len(population) * epoch_weights['percent_parents'])
@@ -173,7 +179,7 @@ class EVO_layer(Layer):
             # Use bubblesort to sort population and fitness_evaluation according to fitness_evaluation
             for _ in range(len(fitness_evaluation)):
                 for i in range(len(fitness_evaluation) - 1):
-                    if self.param['optimisation_mode'] == "max":         # -> Sorting from large to small
+                    if optimisation_mode == "max":         # -> Sorting from large to small
                         if fitness_evaluation[i] < fitness_evaluation[i + 1]:
                             # Reorder population
                             population[i], population[i + 1] = population[i + 1], population[i]
@@ -181,7 +187,7 @@ class EVO_layer(Layer):
                             # Reorder fitness evaluation
                             fitness_evaluation[i], fitness_evaluation[i + 1] = fitness_evaluation[i + 1], fitness_evaluation[i]
 
-                    elif self.param['optimisation_mode'] == "min":       # -> Sorting from small to large
+                    elif optimisation_mode == "min":       # -> Sorting from small to large
                         if fitness_evaluation[i] > fitness_evaluation[i + 1]:
                             # Reorder population
                             population[i], population[i + 1] = population[i + 1], population[i]

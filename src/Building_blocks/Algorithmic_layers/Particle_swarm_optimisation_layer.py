@@ -30,7 +30,7 @@ class PSO_Layer(Layer):
                  parameter_blacklist: list = [],
 
                  # Misc settings
-                 optimisation_mode="max",
+                 optimisation_mode: str = None,
                  evaluation_function=None,
                  verbose=0,
                  name="Layer"):
@@ -100,29 +100,35 @@ class PSO_Layer(Layer):
 
         return layer_info
 
-    def step(self, population, evaluation_function, epoch: int, data=None, settings=None):
+    def step(self, population, evaluation_function, optimisation_mode: str, epoch: int, data=None, settings=None):
         """
         Perform a single step of the PSO algorithm
 
-        :param population: Population to step
-        :param evaluation_function: Function to evaluate the fitness of the population
+        :param population: Population object
+        :param evaluation_function: Function to evaluate individuals
+        :param optimisation_mode: min or max
         :param epoch: Current epoch
-        :param data:
-        :param settings:
-        :return: Population after step
+        :param data: Data to evaluate individuals on
+        :param settings: Settings to use for evaluation
+
+        :return: Population object
         """
 
         # -> Get epoch weights
         epoch_weights = self.get_epoch_weights(epoch=epoch)
 
         # ============================================================== Evaluate population
-        # !!! Evaluation function set in layer is always prioritised over evaluation function provided by model !!!
+        # !!! Properties set in layer are always prioritised over properties provided by model !!!
         if self.param["evaluation_function"] is not None:
             evaluation_function = self.param["evaluation_function"]
 
+        if self.param["optimisation_mode"] is not None:
+            optimisation_mode = self.param["optimisation_mode"]
+
         population.get_fitness_evaluation(evaluation_function=evaluation_function,
                                           data=data,
-                                          optimisation_mode=self.param['optimisation_mode'])
+                                          settings=settings,
+                                          optimisation_mode=optimisation_mode)
 
         # ============================================================== Prepare population
         # -> Add velocity property to individuals if missing
@@ -135,13 +141,14 @@ class PSO_Layer(Layer):
 
         # ============================================================== Update population
         # -> Get parameter key map
-        key_map = flatten_dict(deepcopy(population[0].parameter_set))
+        key_map = flatten_dict(population[0].parameter_set)
 
+        # -> Iterate over population
         for individual in population:
 
             # -> Adjust all non-blacklisted parameters
             for key in key_map:
-                key = list(key)
+                # key = list(key)
 
                 if any(item in key for item in self.param['parameter_blacklist']) is False:
                     # -> Get difference between best swarm fitness and current fitness

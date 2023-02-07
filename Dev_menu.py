@@ -57,14 +57,14 @@ my_model.add_layer(EVO_layer(individual_template=individual_template,
                              percent_random_ind_in_next_gen=0.3,
                              verbose=0))
 
-my_model.add_layer(Rastrigin_VISU_layer(plot_rate=1))
+# my_model.add_layer(Rastrigin_VISU_layer(plot_rate=1))
 
 my_model.add_layer(PSO_Layer(inertia_weight=0.729,
                              cognitive_weight=1.49445,
                              social_weight=1.49445,
                              verbose=0))
 
-my_model.add_layer(Rastrigin_VISU_layer(plot_rate=1))
+# my_model.add_layer(Rastrigin_VISU_layer(plot_rate=1))
 
 # my_model.add_layer(sub_model)
 
@@ -73,26 +73,28 @@ my_model.add_layer(PSO_Layer(inertia_weight=0.729,
                              social_weight=1.49445,
                              verbose=0))
 
-my_model.add_layer(Rastrigin_VISU_layer(plot_rate=1))
+# my_model.add_layer(Rastrigin_VISU_layer(plot_rate=1))
 
 my_model.add_layer(PSO_Layer(inertia_weight=0.729,
                              cognitive_weight=1.49445,
                              social_weight=1.49445,
                              verbose=0))
 
-my_model.add_layer(Rastrigin_VISU_layer(plot_rate=1))
+# my_model.add_layer(Rastrigin_VISU_layer(plot_rate=1))
 
 my_model.add_layer(PSO_Layer(inertia_weight=0.729,
                              cognitive_weight=1.49445,
                              social_weight=1.49445,
                              verbose=0))
 
-my_model.add_layer(Rastrigin_VISU_layer(plot_rate=1))
+# my_model.add_layer(Rastrigin_VISU_layer(plot_rate=1))
 
 my_model.add_layer(PSO_Layer(inertia_weight=0.729,
                              cognitive_weight=1.49445,
                              social_weight=1.49445,
                              verbose=0))
+
+# my_model.add_layer(Rastrigin_VISU_layer(plot_rate=1))
 
 # --> Create solution population
 my_solutions = gen_initial_population(individual_template=individual_template,
