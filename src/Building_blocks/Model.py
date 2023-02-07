@@ -55,21 +55,6 @@ class Model(Layer):
 
         self.layers = layers
 
-    def __str__(self):
-        for layer in self.layers:
-            if layer.type == "MODEL":
-                print(f" >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> SUB-MODEL - {layer.param['epochs']} epochs")
-                print(layer, end="")
-                print(f" >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ")
-                print("_________________________________________________________________________________")
-
-            else:
-                print(f"{layer.ref} {layer}")
-                if layer != self.layers[-1]:
-                    print("_________________________________________________________________________________")
-
-        return ""
-
     @property
     def layer_count(self):
         """ Returns the number of layers in the model"""
@@ -101,6 +86,9 @@ class Model(Layer):
 
         return training_layers_count
 
+    def add_layer(self, layer):
+        self.layers.append(layer)
+
     def count_layer_types(self, layer_list: list, layer_types_dict=None):
         """
         Counts the number of layers of each type in the model
@@ -125,6 +113,21 @@ class Model(Layer):
 
         return layer_types_dict
 
+    def __str__(self):
+        for layer in self.layers:
+            if layer.type == "MODEL":
+                print(f">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> {layer.name} - SUB-MODEL - {layer.param['epochs']} epochs")
+                print(layer, end="")
+                print(f">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ")
+                print("_________________________________________________________________________________")
+
+            else:
+                print(f"{layer.ref} {layer}")
+                if layer != self.layers[-1]:
+                    print("_________________________________________________________________________________")
+
+        return ""
+
     def summary(self):
         # -> Count step types
         layer_types_dict = self.count_layer_types(layer_list=self.layers)
@@ -135,7 +138,9 @@ class Model(Layer):
         print("=================================================================================")
         print(self.__str__())
 
-        print("=================================================================================\n")
+        print("=================================================================================")
+        print("                                  Model summary")
+        print("_________________________________________________________________________________\n")
         print("-> Epoch training steps count:")
         for layer_type in layer_types_dict.keys():
             if layer_type not in self.param["non_training_layers"]:
@@ -148,12 +153,9 @@ class Model(Layer):
             if layer_type not in self.param["non_training_layers"]:
                 print(f" - {layer_type} steps: {layer_types_dict[layer_type] * self.param['epochs']}")
 
-        print("\n=================================================================================\n")
+        print("=================================================================================\n")
 
         return
-
-    def add_layer(self, layer):
-        self.layers.append(layer)
 
     def step(self, population, evaluation_function, optimisation_mode: str, epoch, data=None, settings=None):
         """
@@ -213,7 +215,7 @@ class Model(Layer):
         if self.verbose == 1:
             print("")
             print("Training complete")
-            print("--------------------------------------------------------------------------------------")
+            print("---------------------------------------------------------------------------------")
 
             # --> Evaluate population
             fitness_evaluation = population.get_fitness_evaluation(evaluation_function=evaluation_function,
