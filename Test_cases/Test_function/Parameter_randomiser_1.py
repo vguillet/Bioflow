@@ -6,13 +6,11 @@ Placeholder layer used to signal to model to reset run parameters to default
 
 # Built-in/Generic Imports
 import random
-from copy import deepcopy
 
 # Libs
-from flatten_dict import flatten
 
 # Own modules
-from src.Building_blocks.Parameter_tools import get_from_dict, add_in_dict
+from src.Tools.Parameter_tools import add_in_dict
 
 __version__ = '1.1.1'
 __author__ = 'Victor Guillet'

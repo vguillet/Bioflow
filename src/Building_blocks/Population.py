@@ -19,8 +19,11 @@ __date__ = '10/09/2019'
 ################################################################################################################
 
 class Population(list):
-    best_fitness_history = []
-    best_individual_history = []
+    def __init__(self):
+        super().__init__()
+
+        self.best_fitness_history = []
+        self.best_individual_history = []
 
     def get_fitness_evaluation(self,
                                evaluation_function,
@@ -45,9 +48,7 @@ class Population(list):
                                                                    data=data,
                                                                    record_evaluation=True)
 
-            # --> Record to individual history
-            individual.fitness_history.append(individual_fitness)
-            individual.parameter_set_history.append(individual.parameter_set)
+            # --> Record individual fitness
             fitness_evaluation.append(individual_fitness)
 
             # --> Record solution if best overall

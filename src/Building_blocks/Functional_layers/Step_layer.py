@@ -24,17 +24,10 @@ class STEP_layer(Layer):
                  verbose=0,
                  name=""):
 
+        super().__init__(name=name, verbose=verbose)
+
         # --> Meta
-        self.ref = "      "
         self.type = "STEP"
-        self.name = name
-
-        self.verbose = verbose
-
-        return
 
     def __str__(self):
-        return f"  -> {self.name} ({self.type})"
-
-    def step(self, population, evaluation_function, epoch, max_epoch, data=None, settings=None):
-        return population
+        return f"#######################> {self.name} ({self.type})"

@@ -6,14 +6,11 @@
 
 # Built-in/Generic Imports
 import sys
-import json
-from copy import deepcopy
 
 # Own modules
 from src.Building_blocks.abc_Layer import Layer
 from src.Building_blocks.Population import Population
-from src.Building_blocks.Parameter_tools import select_random_parameter_to_modify
-
+from src.Tools.Parameter_tools import *
 
 __version__ = '1.1.1'
 __author__ = 'Victor Guillet'
@@ -24,78 +21,153 @@ __date__ = '10/09/2019'
 
 class EVO_layer(Layer):
     def __init__(self,
+                 # EVO settings
                  parameter_randomiser,
-
                  individual_template,
-                 percent_parents: float = 0.3,
-                 percent_parents_in_next_gen: float = 0.1,
-                 percent_random_ind_in_next_gen: float = 0.1,
                  selection_method: int = 0,
-
-                 mutation_rate: float = 0.2,
-                 parameter_blacklist: list = [],
                  parameters_decay_function: int = 0,
 
+                 # Weights
+                 percent_parents: int or float or list = 0.3,
+                 percent_parents_in_next_gen: int or float or list = 0.1,
+                 percent_random_ind_in_next_gen: int or float or list = 0.1,
+                 mutation_rate: int or float or list = 0.2,
+
+                 parameters_throttle_curves: dict or None = None,
+
+                 # Blacklisted parameters
+                 parameter_blacklist: list = [],
+
+                 # Misc settings
                  optimisation_mode="max",
+                 evaluation_function=None,
                  verbose=0,
                  name="Layer"):
+        """
+        Initialise an EVO layer.
 
-        # --> Meta
-        self.ref = ""
+        selection_method:
+            0: Elitic selection
+
+        :param parameter_randomiser:
+        :param individual_template:
+        :param selection_method:
+        :param parameters_decay_function:
+        :param percent_parents:
+        :param percent_parents_in_next_gen:
+        :param percent_random_ind_in_next_gen:
+        :param mutation_rate:
+        :param parameters_throttle_curves: A dict of throttle curves for each parameter,
+                                           each curve is a list of at least 2 values
+        :param parameter_blacklist:
+        :param optimisation_mode:
+        :param evaluation_function:
+        :param verbose:
+        :param name:
+        """
+
+        super().__init__(name=name, verbose=verbose)
+
+        # -> Meta
         self.type = "EVO"
-        self.name = name
 
-        self.verbose = verbose
+        # -> Settings
+        self.param = {
+            # EVO settings
+            "parameter_randomiser": parameter_randomiser,
+            "individual_template": individual_template,
+            "selection_method": selection_method,
+            "parameters_decay_function": parameters_decay_function,
 
-        # --> Settings
-        self.param = {"optimisation_mode": optimisation_mode,
-                      "parameter_randomiser": parameter_randomiser,
-                      "individual_template": individual_template,
+            "parameters_throttle_curves": parameters_throttle_curves,
+            "parameters_throttle_curves_scaled": {},
 
-                      "percent_parents": percent_parents,
-                      "percent_parents_in_next_gen": percent_parents_in_next_gen,
-                      "percent_random_ind_in_next_gen": percent_random_ind_in_next_gen,
-                      "selection_method": selection_method,
-                      "mutation_rate": mutation_rate,
+            # Weight curves
+            "weight_curves": {
+                "percent_parents": {
+                    "reference_curve": percent_parents if type(percent_parents) is list
+                                        else [percent_parents, percent_parents],
+                    "scaled_curve": None,
+                },
 
-                      "parameter_blacklist": parameter_blacklist,
-                      "parameters_decay_function": parameters_decay_function
-                      }
+                "percent_parents_in_next_gen": {
+                    "reference_curve": percent_parents_in_next_gen if isinstance(percent_parents_in_next_gen, list)
+                                        else [percent_parents_in_next_gen, percent_parents_in_next_gen],
+                    "scaled_curve": None,
+                },
 
-        return
+                "percent_random_ind_in_next_gen": {
+                    "reference_curve": percent_random_ind_in_next_gen if isinstance(percent_random_ind_in_next_gen, list)
+                                        else [percent_random_ind_in_next_gen, percent_random_ind_in_next_gen],
+                    "scaled_curve": None,
+                },
+
+                "mutation_rate": {
+                    "reference_curve": mutation_rate if isinstance(mutation_rate, list)
+                                        else [mutation_rate, mutation_rate],
+                    "scaled_curve": None,
+                },
+            },
+
+            # Blacklist
+            "parameter_blacklist": parameter_blacklist,
+
+            # Misc
+            "optimisation_mode": optimisation_mode,
+            "evaluation_function": evaluation_function,
+        }
 
     def __str__(self):
+        """
+        :return: String representation of layer
+        """
 
-        settings_option_lists = json.load(open(r"src/Configuration_management/Settings_option_list.json"))
-        selection_method = settings_option_lists["parents_selection_methods"][self.param["selection_method"]]
+        # -> Construct layer info
+        layer_info = f"-------------- {self.name} ({self.type})        " + \
+                     f"\n     - Optimiser mode: {self.param['optimisation_mode']} " + \
+                     f"\n     - Selection method: {self.param['selection_method']} \n"
+        layer_info += self.weights_summary()
 
-        return f"       {self.name} ({self.type})        " + \
-               f"Optimiser mode: {self.param['optimisation_mode']}, " \
-               f"Parents: {self.param['percent_parents'] * 100}%, " \
-               f"Parents in next gen: {self.param['percent_parents_in_next_gen'] * 100}%, " \
-               f"Random: {self.param['percent_random_ind_in_next_gen'] * 100}%, " \
-               f"Mutation rate: {self.param['mutation_rate'] * 100}, " \
-               f"Selection method: {self.param['selection_method']}"
+        return layer_info
 
-    def step(self, population, evaluation_function, epoch, max_epoch, data=None, settings=None):
+    def step(self, population, evaluation_function, epoch: int, data=None, settings=None):
+        """
+        Perform a single step of the EVO layer.
 
-        # --> Evaluate population
+        :param population:
+        :param evaluation_function:
+        :param epoch:
+        :param data:
+        :param settings:
+        :return:
+        """
+
+        # -> Get epoch weights
+        epoch_weights = self.get_epoch_weights(epoch=epoch)
+
+        # ============================================================== Evaluate population
+        # !!! Evaluation function set in layer is always prioritised over evaluation function provided by model !!!
+        if self.param["evaluation_function"] is not None:
+            evaluation_function = self.param["evaluation_function"]
+
         fitness_evaluation = population.get_fitness_evaluation(evaluation_function=evaluation_function,
                                                                data=data,
                                                                optimisation_mode=self.param['optimisation_mode'])
 
-        parents_count = round(len(population) * self.param['percent_parents'])
-        parents_count_in_next_gen = round(len(population) * self.param['percent_parents_in_next_gen'])
-        random_ind_count_in_next_gen = round(len(population) * self.param['percent_random_ind_in_next_gen'])
+        # ============================================================== Prepare next generation
+        parents_count = round(len(population) * epoch_weights['percent_parents'])
+        parents_count_in_next_gen = round(len(population) * epoch_weights['percent_parents_in_next_gen'])
+        random_ind_count_in_next_gen = round(len(population) * epoch_weights['percent_random_ind_in_next_gen'])
 
         assert len(population) >= parents_count_in_next_gen + random_ind_count_in_next_gen, \
             "!!! Sum of desired parent count and random individual count larger than total population size !!!"
 
-        # ----- Select parents
+        # ============================================================== Select parents
         parents = []
 
         # --> Select individuals
         # TODO: Implement alternative selection methods
+
         # Elitic selection
         if self.param['selection_method'] == 0:
             # Use bubblesort to sort population and fitness_evaluation according to fitness_evaluation
@@ -127,12 +199,15 @@ class EVO_layer(Layer):
         else:
             sys.exit("Invalid parent selection method reference")
 
-        # ----- Generate new population
-        # TODO: Throttle number of parameters to mutate
-        nb_of_parameters_to_mutate = round(parents[0].nb_of_adjustable_parameters * self.param['mutation_rate']) or 1
+        # ============================================================== Generate new population
+        adjustable_parameter_count = \
+            parents[0].get_adjustable_parameter_count(layer_parameter_blacklist=self.param['parameter_blacklist'])
+
+        nb_of_parameters_to_mutate = round(adjustable_parameter_count * epoch_weights['mutation_rate']) or 1
 
         # --> Add required number of parents to new population (from best to worst)
-        new_population = Population(population[:parents_count_in_next_gen])
+        new_population = Population()
+        new_population += population[:parents_count_in_next_gen]
 
         # --> Generate offsprings from parents with mutations
         # Cycle through parent list to create offspring
@@ -150,15 +225,15 @@ class EVO_layer(Layer):
             # Mutate offspring
             for _ in range(nb_of_parameters_to_mutate):
                 # Select parameter class to modify
-                parameter_to_modify = select_random_parameter_to_modify(parameter_set=offspring.parameter_set,
-                                                                        parameter_blacklist=self.param['parameter_blacklist'])
+                parameter_to_modify = select_random_parameter_to_modify(individual=offspring,
+                                                                        layer_parameter_blacklist=self.param['parameter_blacklist'])
 
                 # Modify parameter
-                offspring.parameter_set = self.param['parameter_randomiser']().modify_param(parameter_set=offspring.parameter_set,
-                                                                                            parameter_to_modify=parameter_to_modify,
-                                                                                            current_generation=epoch,
-                                                                                            nb_of_generations=max_epoch,
-                                                                                            parameters_decay_function=self.param['parameters_decay_function'])
+                offspring.parameter_set = \
+                    self.param['parameter_randomiser'](parameter_set=offspring.parameter_set,
+                                                       parameter_to_modify=parameter_to_modify,
+                                                       current_epoch=epoch,
+                                                       parameters_throttle_curves=self.param['parameters_throttle_curves_scaled'])
 
             # Add offspring to new population
             new_population.append(offspring)
@@ -167,6 +242,7 @@ class EVO_layer(Layer):
         for _ in range(random_ind_count_in_next_gen):
             new_population.append(deepcopy(self.param['individual_template']()))
 
+        # ============================================================== Print step info
         if self.verbose == 1:
             print(f"---- << EVO layer {epoch + 1} >> ----")
             print(f" Parent count: {parents_count}")

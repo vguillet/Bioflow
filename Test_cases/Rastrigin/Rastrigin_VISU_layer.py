@@ -27,11 +27,12 @@ class Rastrigin_VISU_layer(STEP_layer):
     def __init__(self,
                  plot_rate=10,
                  name="Visualiser"):
-        super().__init__(name=name)
+
+        super().__init__(name=name, verbose=0)
 
         self.plot_rate = plot_rate
 
-    def step(self, population, evaluation_function, epoch, max_epoch, data=None, settings=None):
+    def step(self, population, evaluation_function, epoch, data=None, settings=None):
         if epoch % self.plot_rate == 0:
             x = np.linspace(-5.12, 5.12, 100)
             y = np.linspace(-5.12, 5.12, 100)
@@ -50,6 +51,7 @@ class Rastrigin_VISU_layer(STEP_layer):
             x_population = []
             y_population = []
             z_population = []
+
             for individual in population:
                 x_population.append(individual.parameter_set["x"])
                 y_population.append(individual.parameter_set["y"])

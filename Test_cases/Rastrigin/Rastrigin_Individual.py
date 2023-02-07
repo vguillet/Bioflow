@@ -25,15 +25,12 @@ class Rastrigin_Indvidual(Individual):
     def __init__(self):
         super().__init__()
 
-        self.nb_of_adjustable_parameters = 2
         self.parameter_set = {"x": -5.12 + (5.12 - -5.12) * random.random(),
                               "y": -5.12 + (5.12 - -5.12) * random.random(),
                               "test": {"v": 1,
                                        "w": 0}}
 
-        # self.name = Faker().name()
-
-        return
+        self.parameter_blacklist = []
 
     def gen_parameter_set(self):
         return

@@ -29,23 +29,31 @@ class Model(Layer):
                  epochs: int = 10,
                  verbose=0,
                  name="Model"):
-        # --> Meta
-        self.ref = ""
+
+        super().__init__()
+
+        # -> Meta
         self.type = "MODEL"
         self.name = name
 
         self.verbose = verbose
-        self.optimisation_mode = optimisation_mode
 
-        # --> Settings
-        self.evaluation_function = evaluation_function
+        # -> Settings
+        self.param = {
+            # Model settings
+            "evaluation_function": evaluation_function,
+            "epochs": epochs,
+
+            # Base weights
+            "base_weights": {},
+            "weight_curves": {},
+
+            # Misc
+            "optimisation_mode": optimisation_mode,
+            "non_training_layers": ["RESET", "MODULATOR", "STEP", "MODEL"],
+        }
 
         self.layers = layers
-        self.epochs = epochs
-
-        self.layer_count = 0
-
-        return
 
     def __str__(self):
         for layer in self.layers:
@@ -55,72 +63,98 @@ class Model(Layer):
                 print("  >>>>>>>>")
 
             else:
-                print(f"  {layer.ref} {layer}")
+                print(f"{layer.ref} {layer}")
 
         return ""
 
-    def summary(self):
-        # --> Count step types
-        def count_layer_types(layer_list, layers_count):
-            for layer in layer_list:
-                if layer.type == "MODEL":
-                    count_layer_types(layer.layers, layers_count)
+    @property
+    def layer_count(self):
+        """ Returns the number of layers in the model"""
+        return len(self.layers)
 
+    @property
+    def training_steps_count(self):
+        """ Returns the number of training steps in the model"""
+        return self.layer_count * self.epochs
+
+    @staticmethod
+    def count_training_layers(layer_list):
+        """
+        Counts the number of training layers in the model
+
+        :param layer_list: list of layers
+        :return: int of training layers count
+        """
+
+        training_layers_count = 0
+
+        # -> Get dict of layer types and their respective count
+        count_layer_types = self.count_layer_types(layer_list=layer_list)
+
+        # -> Count training layers
+        for layer_type in count_layer_types.keys():
+            if layer_type not in self.param["non_training_layers"]:
+                training_layers_count += count_layer_types[layer_type]
+
+        return training_layers_count
+
+    @staticmethod
+    def count_layer_types(layer_list: list, layer_types_dict=None):
+        """
+        Counts the number of layers of each type in the model
+
+        :param layer_list: list of layers
+        :param layer_types_dict: base dict of layer types and their count
+        :return: dict of layer types and their count
+        """
+
+        if layer_types_dict is None:
+            layer_types_dict = {}
+
+        for layer in layer_list:
+            if layer.type == "MODEL":
+                layer_types_dict = self.count_layer_types(layer_list=layer.layers, layer_types_dict=layer_types_dict)
+
+            else:
+                if layer.type not in layer_types_dict.keys():
+                    layer_types_dict[layer.type] = 1
                 else:
-                    if layer.type in layers_count.keys():
-                        layers_count[layer.type] += 1
-                    else:
-                        layers_count[layer.type] = 1
+                    layer_types_dict[layer.type] += 1
 
-            return layers_count
+        return layer_types_dict
 
-        layers_counter = count_layer_types(layer_list=self.layers,
-                                           layers_count={})
+    def summary(self):
+        # -> Count step types
+        layer_types_dict = self.count_layer_types(layer_list=self.layers)
 
         # --> Print model structure
         print("=================================================================================")
         print("                                 MODEL Structure                                 ")
-        print("=================================================================================")
-        print("")
+        print("=================================================================================\n")
+
         print(self.__str__())
         print("=======================================")
 
-        print("")
-        print("-> Epoch training steps count:")
-        for key in layers_counter.keys():
-            if key != "RESET" and key != "MODULATOR" and key != "STEP" and key != "MODEL":
-                print(f" - {key} steps: {layers_counter[key]}")
+        print("\n-> Epoch training steps count:")
+        for layer_type in layer_types_dict.keys():
+            if layer_type not in self.param["non_training_layers"]:
+                print(f" - {layer_type} steps: {layer_types_dict[layer_type]}")
 
-        print("")
-        print("-> Full training steps count:")
+        print("\n-> Cumulated training steps count:")
 
         # --> Print run recap
-        for key in layers_counter.keys():
-            if key != "RESET" and key != "MODULATOR" and key != "STEP" and key != "MODEL":
-                print(f" - {key} steps: {layers_counter[key] * self.epochs}")
+        for layer_type in layer_types_dict.keys():
+            if layer_type not in self.param["non_training_layers"]:
+                print(f" - {layer_type} steps: {layer_types_dict[layer_type] * self.param['epochs']}")
 
-        print("")
-        print("=================================================================================\n")
+        print("\n=================================================================================\n")
 
         return
 
     def add_layer(self, layer):
-        if layer.type != "RESET" and layer.type != "MODULATOR" and layer.type != "STEP":
-            # --> Set layer ref
-            self.layer_count += 1
-            layer.ref = self.layer_count
+        self.layers.append(layer)
 
-            # --> Set optimisation mode
-            layer.param['optimisation_mode'] = self.optimisation_mode
-
-            self.layers.append(layer)
-
-        else:
-            self.layers.append(layer)
-
-        return
-
-    def step(self, population, evaluation_function, epoch, max_epoch, data=None, settings=None):
+    def step(self, population, evaluation_function, epoch, data=None, settings=None):
         self.evaluation_function = evaluation_function
 
         return self.train(population, data=data, settings=None)
@@ -131,47 +165,35 @@ class Model(Layer):
             print("--------------------------------------------------------------------------------------")
             self.summary()
 
-        evaluation_function = self.evaluation_function
-        population = Population(population)
+        # -> Define training variables (adjustable using modulator layers)
+        evaluation_function = self.param["evaluation_function"]
+        data = data
+        settings = settings
+
+        # -> Prime layers
+        for layer in self.layers:
+            layer.prime(epochs=self.param["epochs"])
 
         # ----- Perform training
-        for epoch in range(self.epochs):
+        for epoch in range(self.param["epochs"]):
             if self.verbose == 1:
                 print(f"============================================= Epoch {epoch + 1}")
 
-            # --> Set trackers to default
-            step_tracker = epoch
-            max_step_tracker = self.epochs
-
+            # -> Process all layers
             for layer in self.layers:
-                # --> Process reset layer
-                if layer.type == "RESET":
-                    evaluation_function_bool, step_tracker_bool, max_step_tracker_bool = layer.step()
+                # -> Process modulator layer
+                if layer.type == "MODULATOR":
+                    evaluation_function = layer.step(population=population,
+                                                     evaluation_function=evaluation_function,
+                                                     epoch=epoch,
+                                                     data=data,
+                                                     settings=settings)
 
-                    if evaluation_function_bool:
-                        evaluation_function = self.evaluation_function
-
-                    if step_tracker_bool:
-                        step_tracker = epoch
-
-                    if max_step_tracker_bool:
-                        max_step_tracker = self.epochs
-
-                # --> Process modulator layer
-                elif layer.type == "MODULATOR":
-                    population, evaluation_function, step_tracker, max_step_tracker = layer.step(population=population,
-                                                                                                 evaluation_function=evaluation_function,
-                                                                                                 epoch=step_tracker,
-                                                                                                 max_epoch=max_step_tracker,
-                                                                                                 data=data,
-                                                                                                 settings=settings)
-
-                # --> Process all other layer
+                # -> Process all other layers
                 else:
                     population = layer.step(population=population,
                                             evaluation_function=evaluation_function,
-                                            epoch=step_tracker,
-                                            max_epoch=max_step_tracker,
+                                            epoch=epoch,
                                             data=data,
                                             settings=None)
 

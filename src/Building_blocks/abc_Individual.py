@@ -11,6 +11,7 @@ from abc import ABC, abstractmethod
 # Libs
 
 # Own modules
+from src.Tools.Parameter_tools import *
 
 __version__ = '1.1.1'
 __author__ = 'Victor Guillet'
@@ -23,13 +24,29 @@ __date__ = '10/09/2019'
 class Individual(ABC):
     def __init__(self):
 
-        self.nb_of_adjustable_parameters = 0
         self.parameter_set = None
+
+        self.parameter_blacklist = []
 
         self.fitness_history = []
         self.parameter_set_history = []
 
         return
+
+    def get_adjustable_parameter_count(self, layer_parameter_blacklist: list = []):
+        # -> Merge individual parameter blacklist with layer parameter blacklist
+        parameter_blacklist = (self.parameter_blacklist + layer_parameter_blacklist)
+
+        parameter_dict_flat = flatten_dict(self.parameter_set)
+
+        # -> Count all parameters that do not contain a key in the blacklist
+        adjustable_parameter_count = 0
+
+        for parameter in parameter_dict_flat:
+            if not any(key in parameter for key in parameter_blacklist):
+                adjustable_parameter_count += 1
+
+        return adjustable_parameter_count
 
     @property
     def best_fitness(self):
@@ -47,8 +64,7 @@ class Individual(ABC):
     def get_fitness_evaluation(self,
                                evaluation_function,
                                data,
-                               record_evaluation=False,
-                               optimisation_mode="max"):
+                               record_evaluation=False):
         # --> Evaluate individual
         individual_fitness = evaluation_function(individual=self,
                                                  data=data)

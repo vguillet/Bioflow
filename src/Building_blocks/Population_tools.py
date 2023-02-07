@@ -11,7 +11,7 @@ import random
 # Libs
 
 # Own modules
-# from src.Building_blocks.Population import Population
+from src.Building_blocks.Population import Population
 
 __version__ = '1.1.1'
 __author__ = 'Victor Guillet'
@@ -21,7 +21,7 @@ __date__ = '10/09/2019'
 ################################################################################################################
 
 def gen_initial_population(individual_template, population_size=10):
-    population_lst = []
+    population_lst = Population()
 
     for i in range(population_size):
         population_lst.append(individual_template())
